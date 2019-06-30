@@ -14,7 +14,6 @@ Without these, this project would not be as easy as it has been. Really fantasti
 Lib: Cherry MX switch - reference
 Download here: https://www.thingiverse.com/thing:421524
 
-						module cherryCap(x=0,y=0,z=0, capSize=1){
 ### Awesome caps created by rsheldiii
 Lib: KeyV2: Parametric Mechanical Keycap Library
 Download here: https://www.thingiverse.com/thing:2783650
