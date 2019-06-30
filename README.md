@@ -11,9 +11,9 @@ It's split and it's meant to be mirrored halves.
 Without these, this project would not be as easy as it has been. Really fantastic stuff.
 
 ### Awesome Cherry MX model created by gcb
-Lib: Cherry MX switch - reference
+Lib: Cherry MX switch - reference  
 Download here: https://www.thingiverse.com/thing:421524
 
 ### Awesome caps created by rsheldiii
-Lib: KeyV2: Parametric Mechanical Keycap Library
+Lib: KeyV2: Parametric Mechanical Keycap Library  
 Download here: https://www.thingiverse.com/thing:2783650
