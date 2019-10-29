@@ -1,11 +1,13 @@
 showCut=false;
 showSwitchCut=true;
-keyboardPlacement=[-32,-60,42];
-keyboardRotation=[336,12,7];
+keyboardPlacement=[-20.5,-50,70];
+keyboardRotation=[336,30,7];
 showSwitch=false;
 showKeyCap=false;
 showSpaceBox=false;
 space=19.04;
+plateSpace12Deg=space*5.023;
+
 
 /*[case]*/
 showUpperCase=true;
@@ -15,17 +17,21 @@ caseZDiff=caseThickness/2;
 fillerWidth=caseThickness/2;
 leftFillerPlacement=[space*0.5-(fillerWidth*0.5),0,0];
 rightFillerPlacement=[-space*0.5+(fillerWidth*0.5),0,0];
+frontFillerPlacement=[0,-space*0.505,0];
+backFillerPlacement=[0,space*0.505,0];
 
 /*[Thumb placement]*/
-thumbXSpace=0.4;
-thumbYSpace=4.5;
-thumbZSpace=1.8;
-thumbRX=20;
-thumbRY=-20;
-thumbRZ=-20;
+thumbXSpace=0.6;
+thumbYSpace=-0.100;
+thumbZSpace=-0.726;
+thumbRX=-75;
+thumbRY=20;
+thumbRZ=60;
 thumbX=space*thumbXSpace;
 thumbY=space*thumbYSpace;
 thumbZ=space*thumbZSpace;
+thumbPlacement = [thumbX,thumbY,thumbZ];
+thumbRotation = [thumbRX,thumbRY,thumbRZ];
 
 
 /*[Cherry MX settings]*/
@@ -40,33 +46,40 @@ printerSize=[140,140,140];
 
 // ---- Columns ----
 module col1(addZ=0,rotation=[0,15,0]){
-	translate([space*0,space*1.25,22.5+addZ])rotate(rotation)children();
+//	translate([space*0,space*0,22.5+addZ])rotate(rotation)
+  translate([space*0,space*0.5,0+addZ])rotate([6,0,0])
+  children();
 }
-module col1B(addZ=0){
-  col1(-22.5+addZ,rotation=[0,0,0])children();
-}
-
 
 module col2(addZ=0,rotation=[0,12,-1]){
-	translate([space*0.96,space*0.75,14.7+addZ])rotate(rotation)children();
+//	translate([space*0.96,space*0,14.7+addZ])rotate(rotation)
+  translate([space*1,space*0.25,0+addZ])rotate([3,0,0])
+  children();
 }
-
 
 module col3(addZ=0){
-	translate([space*1.82,space*0,-3.7+addZ])rotate([0,9,-2])children();
+//	translate([space*1.82,space*0,1.5+addZ])rotate([0,9,-2])
+  translate([space*2,space*0,0+addZ])rotate([0,0,0])
+  children();
+  
 }
 
-
 module col4(addZ=0){
-	translate([space*2.933,space*0.6,1.5+addZ])rotate([0,6,-3.2])children();
+//	translate([space*2.933,space*0,1.5+addZ])rotate([0,6,-3.2])
+  translate([space*3,space*0.25,0+addZ])rotate([3,0,0])
+  children();
 }
 
 module col5(addZ=0){
-	translate([space*4.063,space*1.53,10+addZ])rotate([0,3,-4.6])children();
+//	translate([space*4.063,space*0,10+addZ])rotate([0,3,-4.6])
+  translate([space*4,space*0.5,0+addZ])rotate([6,0,0])
+  children();
 }
 
 module col6(addZ=0){
-	translate([space*5.11,space*1.43,9.5+addZ])rotate([0,0,-5.9])children();
+//	translate([plateSpace12Deg1,space*0,9.5+addZ])rotate([0,0,-5.9])
+  translate([space*5,space*0.5,0+addZ])rotate([6,0,0])
+  children();
 }
 
 // ---- Key related "libs" ----
@@ -75,17 +88,19 @@ module cherrySwitch(){
 	// Lib: Cherry MX switch - reference
 	// Download here: https://www.thingiverse.com/thing:421524
 	//  p=cherrySize/2+0.53;
-	translate([0,0,13])
+	translate([0,0,13.32])
 		import("switch_mx.stl");
 }
 
-module cherryCap(x=0,y=0,z=0, capSize=1, homing=false){
+module cherryCap(x=0,y=0,z=0, capSize=1, homing=false,rotateCap=false){
 	// Awesome caps created by rsheldiii
 	// Lib: KeyV2: Parametric Mechanical Keycap Library
 	// Download here: https://www.thingiverse.com/thing:2783650
 
+  capRotation = rotateCap ? 90 : 0;
+
 	if(capSize == 1){
-		translate([x-0.819,y-0.8,z+3.5]){
+		translate([x-0.819,y-0.8,z+3.5])rotate([0,0,capRotation]){
       if(homing){
         rotate([0,0,180])import("keycap-dsa-1.0-row3-homing-cherry.stl");
       } else {
@@ -93,7 +108,9 @@ module cherryCap(x=0,y=0,z=0, capSize=1, homing=false){
       }
     }
 	} else if(capSize==1.25){
+    
 		translate([x-0.819,y-0.8,z+3.5])
+    rotate([0,0,capRotation])
 			import("keycap-dsa-1.25-row3-cherry.stl");
 	}
 
@@ -129,12 +146,18 @@ module arc(angle, keys, spacing, offset=0){
 }
 
 // ---- Keyboard basics ----
-module mxSwitchCut(x=0,y=0,z=0){
+module mxSwitchCut(x=0,y=0,z=0,rotateCap=false){
+  capRotation = rotateCap ? 90 : 0;
   d=14.05;
   p=14.58/2+0.3;
   translate([x,y,z]){
-    translate([0,0,-4]){
-      cube([d,d,10], center=true);
+    translate([0,0,-3.7])
+    rotate([0,0,capRotation]){
+      difference(){
+        cube([d,d,10], center=true);
+        translate([d*0.5,0,0])cube([1,4,12],center=true);
+        translate([-d*0.5,0,0])cube([1,4,12],center=true);
+      }
       
      
       translate([0,-(p-0.6),1.8]) rotate([-10,0,0]) cube([cherryCutOutSize/2,1,1.6],center=true);
@@ -146,7 +169,7 @@ module mxSwitchCut(x=0,y=0,z=0){
   }
 }
 
-module Key(x=0,y=0,z=0,cap=1,homing=false){
+module Key(x=0,y=0,z=0,cap=1,homing=false,rotateCap=false){
   union(){
     if(showSwitch){
       cherrySwitch();
@@ -155,649 +178,898 @@ module Key(x=0,y=0,z=0,cap=1,homing=false){
       mxSwitchCut(x,y,z);
     }
     if(showKeyCap){
-			cherryCap(0.82,0.8,3, cap,homing);
+			cherryCap(0.82,0.8,3.32, cap,homing,rotateCap);
 		}
     if(showSpaceBox){
-			#translate([0,0,7])cube([space*cap,space,space/1.5],center=true);
+      capRotation = rotateCap ? 90 : 0;
+      translate([0,0,7])
+      rotate([0,0,capRotation])
+      #cube([space*cap,space,space*0.7],center=true);
 		}
     if(showCut){
-			translate([0,0,7])cube([space*cap,space*1.065,space/1.5],center=true);
+      capRotation = rotateCap ? 90 : 0;
+			translate([0,0,7])
+      rotate([0,0,capRotation])
+      cube([space*cap,space*1.065,space/1.5],center=true);
 		}
   }
 }
 
-module KeyPlate(w=space,l=space*1.089,h=caseThickness,center=true){
+module KeyPlate(w=space,l=space*1.089,h=caseThickness,center=true,,rotateCap=false){
+  capRotation = rotateCap ? 90 : 0;
+  rotate([0,0,capRotation])
 	cube([w,l,h],center=center);
-//  KeyPlate2(w,l,h);
 }
 
-module KeyPlate2(w=space,l=space*1.089,h=caseThickness,center=true){
-  minkowski(){
-    cube([w-1,l-1,h-1],center=center);
-    sphere(d=1,$fn=20);
+
+
+module legMount(h=space*1,r=1,spaceing=space,fn=30){
+  difference(){
+    union(){
+      translate([0,-spaceing*0.4,0])cube([r*5,r,h*0.5],center=true);
+      translate([0,spaceing*0.4,0])cube([r*5,r,h*0.5],center=true);
+      translate([0,0,-h*0.25])cube([r*5,spaceing*1.3,r],center=true);
+    }
+    
+    translate([0,0,h*0.15])rotate([90,0,0])cylinder(r=r*1.1,h=h*1.5,$fn=fn,center=true);
   }
+  
+}
+
+module legStart(h=space,fn=30){
+  cylinder(r=3,h=h,$fn=fn);
+  translate([0,h/2,2])rotate([90,0,0])cylinder(r=1,h=h,$fn=fn);
+  translate([0,0,h])cylinder(r=1.3,h=h*0.3,$fn=fn);
+}
+
+module leg(h=space,fn=30){
+  difference(){
+    cylinder(r=3,h=h,$fn=fn);
+    translate([0,0,-h*0.01])cylinder(r=1.5,h=h*0.4,$fn=fn);
+  }
+  translate([0,0,h])cylinder(r=1.3,h=h*0.3,$fn=fn);
+  
 }
 
 // ---- Keyboard ----
 
 module fingerSwitchPlacement(){
-  col1()arc(12,4,space*5.1)Key();
+  col1()arc(12,4,plateSpace12Deg)Key();
   {
-    col2()arc(12,2,space*5.1)Key();
-    col2()arc(12,1,space*5.1,2)Key(homing=true);
-    col2()arc(12,1,space*5.1,3)Key();
+    col2()arc(12,2,plateSpace12Deg)Key();
+    col2()arc(12,1,plateSpace12Deg,2)Key(homing=true);
+    col2()arc(12,1,plateSpace12Deg,3)Key();
   }
-  col3()arc(12,5,space*5.1)Key();
-  col4()arc(12,5,space*5.1)Key();
-  col5()arc(12,5,space*5.1)Key();
+  col3()arc(12,5,plateSpace12Deg)Key();
+  col4()arc(12,5,plateSpace12Deg)Key();
+  col5()arc(12,5,plateSpace12Deg)Key();
   col6(){
-    arc(12,1,space*5.1)Key();
-    translate([space*0.125,0,0])arc(12,4,space*5.1,1)Key(cap=1.25);
+    arc(12,1,plateSpace12Deg)Key();
+    translate([space*0.125,0,0])arc(12,4,plateSpace12Deg,1)Key(cap=1.25);
   }
 }
 
 module thumbSwitchPlacement(){
-
-  translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])Key();
-//  translate([-space*1.15,-space*0.11,space*0.06])rotate([-30,10,0])arc(40,1,space*1.8,0)rotate([0,0,-90])Key();
-  translate([0,space,0])rotate([-30,0,90])arc(40,2,space*1.8)rotate([0,0,-90])Key();
+  col1()
+  arc(12,1,plateSpace12Deg,4)
+  translate(thumbPlacement)
+  rotate(thumbRotation)
+  {
+    arc(40,2,space*1.9,0)
+    rotate([0,0,-90]){
+      Key(cap=1.25,rotateCap=true);
+    }
+    
+    
+    arc(40,1,space*1.9,1)
+    rotate([0,0,90])
+    arc(40,1,(space*1.9)*1.1,1)
+    rotate([0,0,180]){
+      Key();
+    }
+  }
+  
 }
+
+module thumbPlacement(){
+  col1()
+  arc(12,1,plateSpace12Deg,4)
+  translate(thumbPlacement)
+  rotate(thumbRotation)
+  children();
+}
+
+module thumbFront(){
+  thumbPlacement()
+  arc(40,1,space*1.9,1)
+  rotate([0,0,90])
+  arc(40,1,(space*1.9)*1.1,1)
+  translate([0,0,-caseZDiff])
+  children();
+}
+
+module thumbMid(){
+  thumbPlacement()
+  arc(40,1,space*1.9,1)
+  translate([0,0,-caseZDiff])
+  children();
+}
+
+  
+module thumbLeft(){
+  thumbPlacement()
+  arc(40,1,space*1.9,0)
+  translate([0,0,-caseZDiff])
+  children();
+}
+
+module keyPlates(){
+  { // Finger
+    col1()
+    arc(12,4,plateSpace12Deg)
+    translate([0,0,-caseZDiff])
+    KeyPlate();
+    
+    col2()arc(12,4,plateSpace12Deg)translate([0,0,-caseZDiff])KeyPlate();
+    col3()arc(12,5,plateSpace12Deg)translate([0,0,-caseZDiff])KeyPlate();
+    col4()arc(12,5,plateSpace12Deg)translate([0,0,-caseZDiff])KeyPlate();
+    col5()arc(12,5,plateSpace12Deg)translate([0,0,-caseZDiff])KeyPlate();
+    col6(){
+      arc(12,1,plateSpace12Deg)translate([0,0,-caseZDiff])KeyPlate();
+      arc(12,4,plateSpace12Deg,1)translate([0,0,-caseZDiff])KeyPlate(w=space*1.25);
+    }
+  }
+  
+  module fingerBackCol1(){
+    col1()
+    arc(12,1,plateSpace12Deg,3)
+    translate([0,0,-caseZDiff])
+    translate(backFillerPlacement)
+    children();
+  }
+  
+  module fingerBackRight(){
+    fingerBackCol1()
+    translate(rightFillerPlacement)
+    KeyPlate(w=fillerWidth,l=fillerWidth);
+  }
+  
+  module fingerBackCol2(){
+    col2()
+    arc(12,1,plateSpace12Deg,3)
+    translate([0,0,-caseZDiff])
+    translate(backFillerPlacement)
+    children();
+  }
+  
+  module fingerBackCol3(){
+    col3()
+    arc(12,1,plateSpace12Deg,4)
+    translate([0,0,-caseZDiff])
+    translate(backFillerPlacement)
+    children();
+  }
+  
+
+
+
+  
+  { // Thumb
+    {
+      { // Plates
+        thumbPlacement()
+        arc(40,2,space*1.9,0)
+        translate([0,0,-caseZDiff])
+        rotate([0,0,-90])
+        KeyPlate(w=space*1.25,rotateCap=true);
+        
+        
+        thumbFront()
+        rotate([0,0,180])
+        KeyPlate();
+      }
+      
+      
+      { // Fillers
+        hull(){
+          thumbLeft()
+          translate(backFillerPlacement)
+          translate([0,fillerWidth,0])
+          KeyPlate(w=space*1.25,l=fillerWidth);
+          
+          thumbMid()
+          translate(frontFillerPlacement)
+          translate([0,-fillerWidth,0])
+          KeyPlate(w=space*1.25,l=fillerWidth);
+        }
+        
+        hull(){
+          thumbMid()
+          translate(rightFillerPlacement)
+          translate([-fillerWidth*2.5,0,0])
+          KeyPlate(w=fillerWidth);
+        
+          thumbFront()
+          translate(frontFillerPlacement)
+          translate([0,-fillerWidth,0])
+          KeyPlate(l=fillerWidth);
+        }
+      }
+    }
+  }
+  
+  { // Finger <-> Thumb filler
+    hull(){
+      col1()
+      arc(12,1,plateSpace12Deg,3)
+      translate([0,0,-caseZDiff])
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      fingerBackRight();
+      
+      
+      thumbFront()
+      translate(rightFillerPlacement)
+      translate(backFillerPlacement)
+      translate([-fillerWidth,0,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+    }
+    hull(){
+      fingerBackRight();
+      
+      
+      thumbFront()
+      translate(rightFillerPlacement)
+      translate(backFillerPlacement)
+      translate([-fillerWidth,0,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      
+      thumbFront()
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([-fillerWidth,0,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+    }
+    hull(){
+      fingerBackRight();
+      
+      
+      thumbFront()
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([-fillerWidth,0,0])
+      translate([0,-fillerWidth,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      
+      thumbMid()
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,-fillerWidth,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+    }
+    hull(){
+      fingerBackRight();
+      
+      
+      thumbMid()
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,-fillerWidth,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      
+      thumbLeft()
+      translate(rightFillerPlacement)
+      translate(backFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,fillerWidth,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+    }
+    
+     hull(){
+      fingerBackRight();
+      
+      
+      thumbLeft()
+      translate(rightFillerPlacement)
+      translate(backFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,fillerWidth,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+       
+      
+      thumbLeft()
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,-0.098,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+    }
+    hull(){
+      fingerBackCol1()
+      translate(leftFillerPlacement)
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+    
+      fingerBackCol2()
+      translate(rightFillerPlacement)
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      
+      thumbLeft()
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,-0.098,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+    }
+    hull(){
+      fingerBackCol3()
+      translate(rightFillerPlacement)
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+     
+      fingerBackCol2()
+      translate(leftFillerPlacement)
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      
+      thumbLeft()
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,-0.098,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+    }
+    hull(){
+      fingerBackCol3()
+      translate(rightFillerPlacement)
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      
+      thumbLeft()
+      translate(leftFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([fillerWidth*1.5,0,0])
+      translate([0,-0.098,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      
+      thumbLeft()
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,-0.098,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+    }
+
+    hull(){
+      
+      thumbLeft()
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,-0.098,0])
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      fingerBackCol2()
+      translate(rightFillerPlacement)
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+      
+      fingerBackCol2()
+      translate(leftFillerPlacement)
+      KeyPlate(w=fillerWidth,l=fillerWidth);
+    }
+  }
+}
+
+module skirt(){
+  
+  module dot(h=fillerWidth){
+    cube([fillerWidth, fillerWidth, h],center=true);
+  }
+  module pin(h=space){
+    translate([0,0,-h*0.5])
+    dot(h=h);
+  }
+  
+  
+  module oldrightSide(){
+    
+    for(i=[0:1]){
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,i)
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        pin();
+        
+        col1()
+        arc(12,1,plateSpace12Deg,i)
+        translate(rightFillerPlacement)
+        translate(backFillerPlacement)
+        pin();
+      }
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,i+1)
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        pin();
+        
+        col1()
+        arc(12,1,plateSpace12Deg,i)
+        translate(rightFillerPlacement)
+        translate(backFillerPlacement)
+        pin();
+      }
+    }
+    
+
+    
+    module point(){
+      col1()
+      arc(12,1,plateSpace12Deg,2)
+      translate(rightFillerPlacement)
+      translate(backFillerPlacement)
+      translate([-space*0.5,0,-(space*0.9-fillerWidth*0.5)])
+      dot();
+    }
+    
+    hull(){
+      col1()
+      arc(12,1,plateSpace12Deg,2)
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      pin();
+    
+      point();
+    }
+    
+    hull(){
+      point();
+      
+      col1()
+      arc(12,1,plateSpace12Deg,2)
+      translate([0,0,-caseZDiff])
+      translate(rightFillerPlacement)
+      KeyPlate(w=fillerWidth);
+    }
+    
+    hull(){
+      thumbFront()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      dot(h=caseThickness);
+      
+      thumbFront()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([0,0,-caseZDiff])
+      dot(h=caseThickness);
+      
+      point();
+    }
+    
+    hull(){
+      col1()
+      arc(12,1,plateSpace12Deg,3)
+      translate(rightFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([0,0,-caseZDiff])
+      dot(h=caseThickness);
+      
+      thumbFront()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([-fillerWidth,0,0])
+      dot(h=caseThickness);
+      
+      point();
+    }
+    
+    hull(){
+      thumbFront()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      dot(h=caseThickness);
+      
+      thumbFront()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([0,0,-space*0.7])
+      dot(h=caseThickness);
+      
+      point();
+    }
+    
+    hull(){
+      thumbFront()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      dot(h=caseThickness);
+      
+      thumbFront()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([0,0,-space*0.7])
+      dot(h=caseThickness);
+    
+      thumbFront()
+      translate(frontFillerPlacement)
+      translate(leftFillerPlacement)
+      dot(h=caseThickness);
+      
+      thumbFront()
+      translate(frontFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([0,0,-space*0.7])
+      dot(h=caseThickness);
+    }
+    hull(){
+      thumbFront()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([0,0,-space*0.7])
+      dot(h=caseThickness);
+
+      thumbFront()
+      translate(frontFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([0,0,-space*0.7])
+      dot(h=caseThickness);
+      
+      thumbFront()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([-space*1.2,-space*2,-space*4])
+      dot(h=caseThickness);
+
+      thumbFront()
+      translate(frontFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([-space*0.6,-space*2,-space*3])
+      dot(h=caseThickness);
+    }
+
+    
+    hull(){
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      dot(h=caseThickness);
+      
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,0,-space])
+      dot(h=caseThickness);
+      
+      thumbFront()
+      translate(frontFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([0,-fillerWidth*1,0])
+      dot(h=caseThickness);
+      
+      thumbFront()
+      translate(frontFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([0,0,-space*0.7])
+      
+      dot(h=caseThickness);
+    }
+    
+    hull(){
+      thumbFront()
+      translate(frontFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([0,0,-space*0.7])
+      dot(h=caseThickness);
+      
+      thumbFront()
+      translate(frontFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([-space*0.6,-space*2,-space*3])
+      dot(h=caseThickness);
+    
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,0,-space])
+      dot(h=caseThickness);
+    
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,-space*0.5,-space*3.3])
+      dot(h=caseThickness);
+    }
+    
+    hull(){
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      dot(h=caseThickness);
+    
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([fillerWidth*1.586,0,0])
+      dot(h=caseThickness);
+    
+      
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,0,-space])
+      dot(h=caseThickness);
+    
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([fillerWidth*1.586,0,0])
+      translate([0,0,-space])
+      dot(h=caseThickness);
+    }
+    
+    hull(){
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,0,-space])
+      dot(h=caseThickness);
+    
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([fillerWidth*1.586,0,0])
+      translate([0,0,-space])
+      dot(h=caseThickness);
+      
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(rightFillerPlacement)
+      translate([-fillerWidth*2.5,0,0])
+      translate([0,-space*0.5,-space*3.3])
+      dot(h=caseThickness);
+    
+      thumbMid()
+      translate(backFillerPlacement)
+      translate(leftFillerPlacement)
+      translate([fillerWidth*1.586,0,0])
+      translate([0,0,-space*3])
+      dot(h=caseThickness);
+    }
+    
+
+    
+  }
+  
+  
+  module rightSide(){
+    module fingerToThumb(){
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,2)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        dot(h=caseThickness);
+      
+        thumbFront()
+        translate(backFillerPlacement)
+        translate(leftFillerPlacement)
+        dot(h=caseThickness);
+      
+        thumbFront()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        dot(h=caseThickness);
+      }
+      
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,2)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        dot(h=caseThickness);
+      
+        col1()
+        arc(12,1,plateSpace12Deg,2)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(backFillerPlacement)
+        dot(h=caseThickness);
+      
+        thumbFront()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        dot(h=caseThickness);
+      }
+    }
+  
+    fingerToThumb();
+    
+  }
+  module leftSide(){
+    module col6WallLine(o,x,y,z,rZ){
+      hull(){
+        col6()
+        arc(12,1,plateSpace12Deg,o)
+        translate([0,0,-caseZDiff*0.5])
+        translate(leftFillerPlacement)
+        translate(frontFillerPlacement)
+        translate([space*0.125,0,0])
+        dot();
+
+        col6()
+        arc(12,1,plateSpace12Deg,o)
+        translate([0,0,-caseZDiff*0.5])
+        translate(leftFillerPlacement)
+        translate(backFillerPlacement)
+        translate([space*0.125,0,0])
+        dot();
+        
+        col6()
+        rotate([
+          -keyboardRotation[0]
+          , -keyboardRotation[1]
+          , -keyboardRotation[2]
+        ])
+        translate([0,space*o,0])
+        translate(leftFillerPlacement)
+        translate([x,y,z])
+        rotate([90,0,rZ])
+        pin(h=space*1.125);
+      }
+    }
+    
+    hull(){ // 1u on col6
+      col6()
+      arc(12,1,plateSpace12Deg)
+      translate([0,0,-caseZDiff*0.5])
+      translate(leftFillerPlacement)
+      translate(frontFillerPlacement)
+      dot();
+
+      col6()
+      arc(12,1,plateSpace12Deg)
+      translate([0,0,-caseZDiff*0.5])
+      translate(leftFillerPlacement)
+      translate(backFillerPlacement)
+      dot();
+
+      
+      col6()
+      arc(12,1,plateSpace12Deg)
+      translate([0,0,-caseZDiff])
+      translate(leftFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([space*0.36,0,-space*0.9])
+      dot();
+      
+      col6()
+      arc(12,1,plateSpace12Deg)
+      translate([0,0,-caseZDiff])
+      translate(leftFillerPlacement)
+      translate(backFillerPlacement)
+      translate([space*0.47,0,-space*0.5])
+      dot();
+    }
+    hull(){ // Filler for 1u <-> 1.25u
+      col6()
+      arc(12,1,plateSpace12Deg)
+      translate([0,0,-caseZDiff*0.5])
+      translate(leftFillerPlacement)
+      translate(backFillerPlacement)
+      dot();
+      
+      col6()
+      arc(12,1,plateSpace12Deg,1)
+      translate([0,0,-caseZDiff*0.5])
+      translate(leftFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([space*0.125,0,0])
+      dot();
+      
+      col6()
+      arc(12,1,plateSpace12Deg)
+      translate([0,0,-caseZDiff])
+      translate(leftFillerPlacement)
+      translate(backFillerPlacement)
+      translate([space*0.47,0,-space*0.5])
+      dot();
+      
+      col6()
+      arc(12,1,plateSpace12Deg,1)
+      translate([0,0,-caseZDiff])
+      translate(leftFillerPlacement)
+      translate(frontFillerPlacement)
+      translate([space*0.504,1,-space*0.41])
+      rotate([0,-35,-0])
+      dot();
+    }
+    
+    col6WallLine(1,space*0.199,-space*0.6,-space*1.3,0);
+    col6WallLine(2,space*0.199,-space*0.5,-space*1.3,-5);
+    col6WallLine(3,space*0.275,-space*0.5,-space*1.32,-10);
+    col6WallLine(4,space*0.4599,-space*0.5,-space*1.4,-15);
+
+
+    
+    
+  }
+  
+//  oldrightSide();
+  rightSide();
+  leftSide();
+}
+
 
 module switchPlacement(){
   fingerSwitchPlacement();
-  
-  translate([thumbX,thumbY,thumbZ])
-  rotate([thumbRX,thumbRY,thumbRZ])
   thumbSwitchPlacement();
 }
 
-module fingerKeyPlates(){
-  col1(-caseZDiff)arc(12,4,space*5.1)KeyPlate();
-  col2(-caseZDiff)arc(12,4,space*5.1)KeyPlate();
-  col3(-caseZDiff)arc(12,5,space*5.1)KeyPlate();
-  col4(-caseZDiff)arc(12,5,space*5.1)KeyPlate();
-  col5(-caseZDiff)arc(12,5,space*5.1)KeyPlate();
-  col6(-caseZDiff){
-    arc(12,1,space*5.1)KeyPlate();
-    translate([space*0.125,0,0])arc(12,4,space*5.1,1)KeyPlate();
-  }
-}
-module fingerPlateFillers(){
-  for(i=[0:3]){ // Col1-col2
-    hull(){
-      col1(-caseZDiff)arc(12,1,space*5.1,i)translate(leftFillerPlacement)KeyPlate(w=fillerWidth);
-      col2(-caseZDiff)arc(12,1,space*5.1,i)translate(rightFillerPlacement)translate([-fillerWidth,0,0])KeyPlate(w=fillerWidth);
-    }
-  }
-  
-  {
-    for(i=[0:3]){ // Col2-Col3
-      hull(){
-        col2(-caseZDiff)arc(12,1,space*5.1,i)translate(leftFillerPlacement)KeyPlate(w=fillerWidth);
-        
-        col3(-caseZDiff)
-        arc(12,1,space*5.1,i)
-        translate(rightFillerPlacement)
-        translate([-fillerWidth*1.2,0,0])
-        KeyPlate(w=fillerWidth);
-      }
-     
-    }
-    col3(-caseZDiff)
-    arc(12,4,space*5.1)
-    translate(rightFillerPlacement)
-    translate([-fillerWidth*1,0,0])
-    KeyPlate(w=fillerWidth);
-    
-    hull(){
-      col2(-caseZDiff)
-      arc(12,1,space*5.1,3)
-      translate(leftFillerPlacement)
-      KeyPlate(w=fillerWidth);
-      
-      col3(-caseZDiff)
-      arc(12,1,space*5.1,4)
-      translate(rightFillerPlacement)
-      translate([-fillerWidth*1,0,0])
-      KeyPlate(w=fillerWidth);
-    }
-  }
-  { // Col3-Col4
-    for(i=[0:2]){
-      hull(){
-        col3(-caseZDiff)arc(12,1,space*5.1,i)translate(leftFillerPlacement)translate([fillerWidth,0,0])KeyPlate(w=fillerWidth);
-        col4(-caseZDiff)arc(12,1,space*5.1,i)translate(rightFillerPlacement)KeyPlate(w=fillerWidth);
-      }
-    }
-    
-    hull(){
-        col3(-caseZDiff)arc(12,1,space*5.1,3)translate(leftFillerPlacement)translate([fillerWidth,0,0])KeyPlate(w=fillerWidth);
-        col4(-caseZDiff)arc(12,1,space*5.1,2)translate(rightFillerPlacement)KeyPlate(w=fillerWidth);
-      }
-    
-    for(i=[3:4]){
-      hull(){
-        col3(-caseZDiff)arc(12,1,space*5.1,4)translate(leftFillerPlacement)KeyPlate(w=fillerWidth);
-        col4(-caseZDiff)arc(12,1,space*5.1,i)translate(rightFillerPlacement)translate([-fillerWidth,0,0])KeyPlate(w=fillerWidth);
-      }
-    }
-  }
-  { // Col4-Col5
-    for(i=[0:2]){
-      hull(){
-        col4(-caseZDiff)arc(12,1,space*5.1,i)translate(leftFillerPlacement)translate([fillerWidth,0,0])KeyPlate(w=fillerWidth);
-        col5(-caseZDiff)arc(12,1,space*5.1,i)translate(rightFillerPlacement)KeyPlate(w=fillerWidth);
-      }
-    }
-    for(i=[3:4]){
-      hull(){
-        col4(-caseZDiff)arc(12,1,space*5.1,i)translate(leftFillerPlacement)KeyPlate(w=fillerWidth);
-        col5(-caseZDiff)arc(12,1,space*5.1,i)translate(rightFillerPlacement)translate([-fillerWidth,0,0])KeyPlate(w=fillerWidth);
-      }
-    }
-  }
-  // Col5-Col6
-    for(i=[0:4]){
-      hull(){
-        col5(-caseZDiff)arc(12,1,space*5.1,i)translate(leftFillerPlacement)KeyPlate(w=fillerWidth);
-        col6(-caseZDiff)arc(12,1,space*5.1,i)translate(rightFillerPlacement)translate([fillerWidth,0,0])KeyPlate(w=fillerWidth);
-      }
-    }
-}
-
-module fingerWalls_right(){
-  for(i=[0:0]){
-    hull(){
-      col1(-caseZDiff)arc(12,1,space*5.1,i)translate(rightFillerPlacement)translate([0,0,-space*0.7])KeyPlate(w=fillerWidth,h=space*1.4);
-      col1(-caseZDiff)arc(12,1,space*5.1,i+1)translate(rightFillerPlacement)translate([0,0,-space*0.7])KeyPlate(w=fillerWidth,h=space*1.4);
-    }
-  }
-  hull(){
-    col1(-caseZDiff)arc(12,1,space*5.1,1)translate(rightFillerPlacement)translate([0,0,-space*0.7])KeyPlate(w=fillerWidth,h=space*1.4);
-    
-    col1(-caseZDiff)arc(12,1,space*5.1,2)translate(rightFillerPlacement)translate([0,-space*0.505,-space*0.7])KeyPlate(w=fillerWidth,l=fillerWidth,h=space*1.4);
-  }
-  
-  hull(){
-    
-    col1(-caseZDiff)arc(12,1,space*5.1,2)translate(rightFillerPlacement)translate([0,-space*0.505,-space*0.7])KeyPlate(w=fillerWidth,l=fillerWidth,h=space*1.4);
-    col1(-caseZDiff)arc(12,1,space*5.1,2)translate(rightFillerPlacement)translate([0,space*0.505,0])KeyPlate(w=fillerWidth,l=fillerWidth);
-   
-    translate([thumbX,thumbY,thumbZ])rotate([thumbRX,thumbRY,thumbRZ])translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(leftFillerPlacement)translate([0,-space*0.49,-caseZDiff])KeyPlate(w=fillerWidth,l=fillerWidth);
-  }
-  
-  module l(off,h=space*3){
-    hull(){
-      col1(-caseZDiff)arc(12,1,space*5.1,off)translate(rightFillerPlacement)translate([0,space*0.5,-space*1.37])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-    
-      col1(-caseZDiff)arc(12,1,space*5.1,off)translate(rightFillerPlacement)translate([fillerWidth*3,space*0.5,-h])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-    }
-  }
-  
-  module r(off,h=space*3){
-    hull(){
-      col1(-caseZDiff)arc(12,1,space*5.1,off)translate(rightFillerPlacement)translate([0,-space*0.5,-space*1.37])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-    
-      col1(-caseZDiff)arc(12,1,space*5.1,off)translate(rightFillerPlacement)translate([fillerWidth*3,-space*0.5,-h])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-    }
-  }
- 
-  hull(){
-    col1(-caseZDiff)arc(12,1,space*5.1,0)translate(rightFillerPlacement)translate([0,-space*0.5,-space*1.36])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-    
-    
-  
-    col1(-caseZDiff,rotation=[0,0,-25])arc(12,1,space*5.1)translate(rightFillerPlacement)translate([-space*0.5,-space*0.524,-space*3.2917])rotate([21,0,0])KeyPlate(l=fillerWidth,h=space*0.1,w=fillerWidth);
-    
-    l(0,space*3.37);
-  }
-  
-  hull(){
-    l(0,space*3.37);
-    r(1,space*3);
-  }
-  
-  hull(){
-    l(1);
-    r(1);
-  }
-  hull(){
-    l(1);
-    r(2);
-  }
-  hull(){
-//    l(2);
-    r(2);
-  }
-}
-module fingerWalls_front(){
-  { // col 1
-      
-      module f(){
-        union()hull(){
-          col1(-caseZDiff)arc(12,1,space*5.1)translate([space*0.0499,-space*0.9122,-space*1.0544])rotate([3.8,-5,-35])KeyPlate(l=fillerWidth,h=space*0.1,w=space*1.25);
-          difference(){
-            col1(-caseZDiff)arc(12,1,space*5.1)translate(rightFillerPlacement)translate([fillerWidth*0.498,-space*0.543,-space*1.15])sphere(r=fillerWidth,$fn=30);
-            col1(-caseZDiff)arc(12,1,space*5.1)translate(rightFillerPlacement)translate([fillerWidth*0.498,-space*0.54,-space*1.15])translate([fillerWidth*0.2,fillerWidth*0.1,0])rotate([0,0,10])cube(fillerWidth*2,center=true);
-          }
-        }
-      }
-      module g(){
-        union()hull(){
-          col1(-caseZDiff)arc(12,1,space*5.1)translate(rightFillerPlacement)translate([0,-space*0.5052,-space*1.39605])rotate([0,0,0])KeyPlate(l=fillerWidth,h=fillerWidth*0.1,w=fillerWidth);
-          
-          col1(-caseZDiff)arc(12,1,space*5.1)translate(leftFillerPlacement)translate([fillerWidth*1.6,-space*1.2715,-space*1.2651])rotate([20,-0,-25])KeyPlate(l=fillerWidth*0.9,h=fillerWidth*0.1,w=fillerWidth*0.1);
-        }
-      }
-      hull(){
-        col1(-caseZDiff)arc(12,1,space*5.1)translate([0,-space*0.505,space*0.02883])KeyPlate(l=fillerWidth,h=space*0.1,w=space);
-        
-        col1(-caseZDiff)arc(12,1,space*5.1)translate([fillerWidth*0.18,-space*0.79115,-space*0.20327])rotate([0,-6,-25])KeyPlate(l=fillerWidth,h=space*0.1,w=space);
-      }
-      
-      hull(){
-        col1(-caseZDiff)arc(12,1,space*5.1)translate([fillerWidth*0.18,-space*0.79115,-space*0.20327])rotate([0,-6,-25])KeyPlate(l=fillerWidth,h=space*0.1,w=space);
-        
-        col1(-caseZDiff)arc(12,1,space*5.1)translate(rightFillerPlacement)translate([0,-space*0.505,caseZDiff*0.365])KeyPlate(l=fillerWidth,h=space*0.1,w=fillerWidth);
-        
-        f();
-      }
-      
-      hull(){
-        f();
-        g();
-      }
-      
-      hull(){
-        g();
-        
-        col1(-caseZDiff,rotation=[0,0,-25])arc(12,1,space*5.1)translate(rightFillerPlacement)translate([-space*0.5,-space*0.524,-space*3.2917])rotate([21,0,0])KeyPlate(l=fillerWidth,h=space*0.1,w=fillerWidth);
-        
-        col1(-caseZDiff,rotation=[0,0,-25])arc(12,1,space*5.1)translate(rightFillerPlacement)translate([space*0.4879,-space*0.52404,-space*3.2917])rotate([21,0,0])KeyPlate(l=fillerWidth,h=space*0.1,w=fillerWidth);
-        
-
-      }
-      
-   
-    }  
-    
-  { // col 2
-    hull(){
-      col2(-caseZDiff)arc(12,1,space*5.1)translate([-fillerWidth*0.5,-space*0.5053,space*0.0288])KeyPlate(l=fillerWidth,h=space*0.1,w=space+fillerWidth);
-    
-      col2(-caseZDiff)arc(12,1,space*5.1)translate([-fillerWidth*0.27,-space*1.0057,-space*0.796])rotate([1.4,-3,-25])KeyPlate(l=fillerWidth,h=space*0.1,w=space+fillerWidth);
-    }
-    
-    col2(-caseZDiff)arc(12,1,space*5.1)translate([-fillerWidth*0.17,-space*1.0054,-space*(0.796+0.14)])rotate([1.4,-3,-25])KeyPlate(l=fillerWidth,h=space*0.28,w=space+fillerWidth);
-    
-    hull(){
-      union(){hull(){
-        col2(-caseZDiff)arc(12,1,space*5.1)translate(leftFillerPlacement)translate([fillerWidth*0.17,-space*1.1936,-space*1.125])rotate([22.3,-2,-4])KeyPlate(l=fillerWidth,h=space*0.2,w=fillerWidth*0.1);
-    
-        col2(-caseZDiff)arc(12,1,space*5.1)translate(rightFillerPlacement)rotate([22.3,-2,-25])translate([fillerWidth*3.354,-space*1.08525,-space*0.8434])KeyPlate(l=fillerWidth,h=space*0.2,w=fillerWidth*0.1);
-      }}
-    
-      col2(-caseZDiff)arc(12,1,space*5.1)
-      rotate([24,-3,-25])
-      translate([-fillerWidth*0.50,-space*1.341867,-space*2.6])
-      rotate([1,-7,10])
-      KeyPlate(l=fillerWidth,h=space*0.1,w=space+fillerWidth*2);
-    }
-    
-  }
-
-
-  { // col 3
-    col3(-caseZDiff)arc(12,1,space*5.1)translate([-fillerWidth*0.1,-space*0.505,-space*0.15])KeyPlate(l=fillerWidth,h=space*0.2,w=space+fillerWidth*2.2);
-    
-    col3(-caseZDiff)arc(12,1,space*5.1)rotate([22,0,0])translate([-fillerWidth*0.1,-space*0.55901,-space*0.12786])KeyPlate(l=fillerWidth,h=space*0.2,w=space+fillerWidth*2.2);
-    
-    col3(-caseZDiff)arc(12,1,space*5.1)rotate([26,0,0])translate([-fillerWidth*0.1,-space*0.57342,-space*1.0602])KeyPlate(l=fillerWidth,h=space*1.75,w=space+fillerWidth*2.2);    
-  }
-  
-  
-  module c4ll(){
-      col4(-caseZDiff)arc(12,1,space*5.1,1)translate(leftFillerPlacement)translate([space,-space*1.2,-space*1.1])rotate([0,-20,10])KeyPlate(l=fillerWidth,h=space*0.1,w=fillerWidth);
-  }
-  { // Col4
-    
-    
-    hull(){
-      col4(-caseZDiff)arc(12,1,space*5.1)translate([fillerWidth*0.5,-space*0.5053,space*0.0288])KeyPlate(l=fillerWidth,h=space*0.1,w=space+fillerWidth);
-      
-      col4(-caseZDiff)arc(12,1,space*5.1)translate([fillerWidth*0.238,-space*0.9302,-space*0.4121])rotate([1.1,3,25])KeyPlate(l=fillerWidth,h=space*0.1,w=space+fillerWidth);
-    }
-    
-    col4(-caseZDiff)arc(12,1,space*5.1)translate([fillerWidth*0.1473,-space*0.930555,-space*0.5479])rotate([1.1,2.7,25])KeyPlate(l=fillerWidth,h=space*0.28,w=space+fillerWidth);
-    
-    hull(){
-      col4(-caseZDiff)arc(12,1,space*5.1)translate(rightFillerPlacement)translate([-fillerWidth*0.2,-space*1.1205,-space*0.741])rotate([21.9,3.5,1])KeyPlate(l=fillerWidth,h=space*0.2,w=fillerWidth*0.1);
-      col4(-caseZDiff)arc(12,1,space*5.1)translate(leftFillerPlacement)translate([fillerWidth*0.13580065,-space*0.6752,-space*0.79168])rotate([21.9,2.7,25])KeyPlate(l=fillerWidth,h=space*0.2,w=fillerWidth*0.1);
-      
-      col4(-caseZDiff)arc(12,1,space*5.1)translate([-fillerWidth*0.324,-space*0.3253,-space*2])rotate([27,-20,10])KeyPlate(l=fillerWidth,h=space*0.1,w=space+fillerWidth*2);
-    }
-    
-    
-    
-    hull(){
-      col4(-caseZDiff)arc(12,1,space*5.1)translate(leftFillerPlacement)translate([0,-space*0.3375,-space*1.6])rotate([20,-20,16])KeyPlate(l=fillerWidth,h=space*0.1,w=fillerWidth);
-      
-      col4(-caseZDiff)arc(12,1,space*5.1)translate([space*0.499,-space*0.7036,-space*0.552])rotate([1.1,2.7,25])KeyPlate(l=fillerWidth,h=space*0.324,w=fillerWidth);
-      
-      c4ll();
-    }
-    
-    hull(){
-      col4(-caseZDiff*0.5)arc(12,1,space*5.1,0)translate(leftFillerPlacement)translate([fillerWidth,-space*0.505,])KeyPlate(h=fillerWidth,w=fillerWidth,l=fillerWidth);
-      
-      col4(-caseZDiff)arc(12,1,space*5.1)translate([space*0.499,-space*0.7036,-space*0.552])rotate([1.1,2.7,25])KeyPlate(l=fillerWidth,h=space*0.324,w=fillerWidth);
-      
-      c4ll();
-    }
-    
-    hull(){
-      col4(-caseZDiff*0.5)arc(12,1,space*5.1,0)translate(leftFillerPlacement)translate([fillerWidth,-space*0.505,])KeyPlate(h=fillerWidth,w=fillerWidth,l=fillerWidth);
-      col5(-caseZDiff*0.5)arc(12,1,space*5.1,0)translate(rightFillerPlacement)translate([0,-space*0.505,])KeyPlate(h=fillerWidth,w=fillerWidth,l=fillerWidth);
-      
-      c4ll();
-    }
-    
-    
-    
-  }
-  
-  hull(){
-    col5(-caseZDiff)arc(12,1,space*5.1)translate([0,-space*0.5,-space*0.02])KeyPlate(l=fillerWidth);
-    
-    c4ll();
-    
-    col6(-caseZDiff)arc(12,1,space*5.1)translate(leftFillerPlacement)translate([0,-space*0.505,-space*0.02])KeyPlate(l=fillerWidth,w=fillerWidth);
-    
-//    col6(-caseZDiff)arc(12,1,space*5.1)translate([0,-space*0.505,-space*0.7])KeyPlate(l=fillerWidth,h=space*1.4);
-    col6(-caseZDiff)arc(12,1,space*5.1)translate(leftFillerPlacement)translate([0,-space*0.505,-space*1.4])KeyPlate(l=fillerWidth,w=fillerWidth);
-  }
-  
-}
-module fingerWalls_left(xPadding){
-
-  
-  function differ(off) = off == 1 
-                        ? -caseZDiff*(0.6-(off/10)) 
-                        : -caseZDiff*(0.7-(off/10))
-                        ;
-  module l(off, h, tilt){
-    hull(){
-      col6(differ(off))arc(12,1,space*5.1,off)translate(leftFillerPlacement)translate([xPadding,-space*0.514,0])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-      
-      col6(-caseZDiff*0.5)arc(12,1,space*5.1,off)translate(leftFillerPlacement)translate([xPadding+tilt,-space*0.514,-h])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-    }
-  }
-
-  module r(off, h, tilt){
-    hull(){
-      col6(differ(off))arc(12,1,space*5.1,off)translate(leftFillerPlacement)translate([xPadding,space*0.514,0])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-      
-      col6(-caseZDiff*0.5)arc(12,1,space*5.1,off)translate(leftFillerPlacement)translate([xPadding+tilt,space*0.514,-h])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-    }
-  }
-  
-  
-  col6(-caseZDiff)arc(12,1,space*5.1,0)translate(leftFillerPlacement)translate([0,0,-space*0.585])KeyPlate(w=fillerWidth,h=space*1.32);
-  
-  hull(){
-    col6(-caseZDiff)arc(12,1,space*5.1,0)translate(leftFillerPlacement)translate([0,space*0.5,-space*0.37125])KeyPlate(w=fillerWidth,h=space*0.9,l=fillerWidth);
-    
-    l(1, space*0.75, xPadding*1.25);
-  }
-  
-  hull(){
-    l(1, space*0.75, xPadding*1.25);
-    r(1, space*0.45, xPadding*1.35);
-  }
-  hull(){
-    l(2, space*0.45, xPadding*1.45);
-    r(2, space*0.45, xPadding*1.7);
-  }
-  hull(){
-    l(3, space*0.45, xPadding*1.7);
-    r(3, space*0.62, xPadding*1.9);
-  }
-  l(4, space*0.7, xPadding*1.9);
-  
-  hull(){
-    r(1, space*0.45, xPadding*1.35);
-    l(2, space*0.45, xPadding*1.45);
-  }
-  hull(){
-    r(2, space*0.45, xPadding*1.7);
-    l(3, space*0.45, xPadding*1.7);
-  }
-  
-  hull(){
-    r(3, space*0.62, xPadding*1.9);
-    l(4, space*0.7, xPadding*1.9);
-  }
-  
-  
-
-  
-  hull(){
-    l(4, space*0.7, xPadding*1.9);
-
-    col6(-caseZDiff)arc(12,1,space*5.1,4)translate(leftFillerPlacement)translate([xPadding,space*0.505,0])KeyPlate(w=fillerWidth,l=fillerWidth,h=fillerWidth);
-    
-    
-    col6(-caseZDiff)arc(12,1,space*5.1,4)translate(leftFillerPlacement)translate([xPadding,space*0.15,-space])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-    
-  }  
-}
-
-module fingerWalls_back(xPadding){
-  { // col6
-    module c6bu(){
-      hull(){
-        col6(-caseZDiff)arc(12,1,space*5.1,4)translate(leftFillerPlacement)translate([xPadding,space*0.505,-space*0.2])KeyPlate(w=fillerWidth,l=fillerWidth,h=fillerWidth);
-      
-        col6(-caseZDiff)arc(12,1,space*5.1,4)translate(rightFillerPlacement)translate([0,space*0.505,-space*0.21])KeyPlate(w=fillerWidth,l=fillerWidth,h=fillerWidth);
-      }
-    }
-    
-    hull(){
-      col6(-caseZDiff)arc(12,1,space*5.1,4)translate(leftFillerPlacement)translate([xPadding,space*0.505,0])KeyPlate(w=fillerWidth,l=fillerWidth,h=fillerWidth);    
-      
-      col6(-caseZDiff)arc(12,1,space*5.1,4)translate(rightFillerPlacement)translate([0,space*0.505,0])KeyPlate(w=fillerWidth,l=fillerWidth,h=fillerWidth);
-      
-      c6bu();
-    }
-    
-    hull(){
-      c6bu();
-      
-      col6(-caseZDiff)arc(12,1,space*5.1,4)translate(leftFillerPlacement)translate([xPadding,space*0.15,-space])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);
-      
-      col6(-caseZDiff)arc(12,1,space*5.1,4)translate(rightFillerPlacement)translate([0,space*0.1,-space*1.1])KeyPlate(w=fillerWidth,h=fillerWidth,l=fillerWidth);  
-    }
-  }
-  
-}
-
-module fingerWalls(){
-  
-  xPadding=space*0.125;
-  fingerWalls_right();
-//  fingerWalls_front();
-  fingerWalls_left(xPadding);
-//  fingerWalls_back(xPadding);
-}
-
-module thumbKeyPlates(){
-  translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate([0,0,-caseZDiff])KeyPlate();
-  translate([0,space,0])rotate([-30,0,90])arc(40,2,space*1.8)rotate([0,0,-90])translate([0,0,-caseZDiff])KeyPlate();
-}
-
-module thumbPlateFillers(){
-  hull(){
-    translate([0,space,0])rotate([-30,0,90])arc(40,1,space*1.8)rotate([0,0,-90])translate([0,0,-caseZDiff])translate(rightFillerPlacement)KeyPlate(w=fillerWidth);
-    
-    translate([0,space,0])rotate([-30,0,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate([0,0,-caseZDiff])translate(leftFillerPlacement)KeyPlate(w=fillerWidth);
-   }
-   
-   
-   hull(){
-     translate([0,0,space*0.105])
-     rotate([-30,12,90])
-     arc(40,1,space*1.8,1)
-     rotate([0,0,-90])
-     translate([0,0,-caseZDiff])
-     translate([0,+space*0.5-(fillerWidth*0.5),0])
-     KeyPlate(l=fillerWidth);
-     
-     translate([0,space,0])
-     rotate([-30,0,90])
-     arc(40,1,space*1.8,1)
-     rotate([0,0,-90])
-     translate([0,0,-caseZDiff])
-     translate([0,-space*0.5+(fillerWidth*0.5),0])
-     KeyPlate(l=fillerWidth);
-   }
-}
-
-module thumbWalls(){
-  module leftPoint(){
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([space*0.65,-space*1.505,-space*1])rotate([0,20,0])KeyPlate(w=fillerWidth*1,l=fillerWidth);
-  }
-  
-  module bottomPoint(){
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([0,-space*0.505,-space*1.7])KeyPlate(w=fillerWidth,l=fillerWidth);
-  }
-  
-  hull(){
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(leftFillerPlacement)translate([0,-space*0.505,-caseZDiff])KeyPlate(w=fillerWidth,l=fillerWidth);
-    
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([0,-space*0.505,-caseZDiff])KeyPlate(w=fillerWidth,l=fillerWidth);
-    
-    leftPoint();
-  }
-  
-  hull(){
-    leftPoint();
-    
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([0,-space*0.505,-caseZDiff])KeyPlate(w=fillerWidth,l=fillerWidth);
-    
-    bottomPoint();
-  }
-  
-  hull(){
-    leftPoint();
-    bottomPoint();
-  
-    translate([-space*0.63,0,-space*1])leftPoint();
-  }
-  
-  
-  hull(){
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([0,-space*0.505,-caseZDiff])KeyPlate(w=fillerWidth,l=fillerWidth);
-    
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([0,space*0.505,-caseZDiff])KeyPlate(w=fillerWidth,l=fillerWidth);
-    
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([0,-space*0.505,-space*1.7])KeyPlate(w=fillerWidth,l=fillerWidth);
-    
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([-fillerWidth*3,space*0.505,-space*1.4])KeyPlate(w=fillerWidth,l=fillerWidth);
-  }
-  hull(){
-    
-    translate([0,0,space*0.105])rotate([-30,12,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([-fillerWidth*3,space*0.505,-space*1.4])KeyPlate(w=fillerWidth,l=fillerWidth);
-    
-    
-    translate([0,space,0])rotate([-30,0,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([0,-space*0.505,-caseZDiff])KeyPlate(w=fillerWidth,l=fillerWidth);
-    
-    translate([0,space,0])rotate([-30,0,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([0,space*0.505,-caseZDiff])KeyPlate(w=fillerWidth,l=fillerWidth);
-    
-    
-    translate([0,space,0])rotate([-30,0,90])arc(40,1,space*1.8,1)rotate([0,0,-90])translate(rightFillerPlacement)translate([-fillerWidth*4,space*0.505,-space*1.4])KeyPlate(w=fillerWidth,l=fillerWidth);
-  }
-  
-}
-
-module thumbToFinger(){
-  
-  hull(){
-    translate([thumbX,thumbY,thumbZ])
-    rotate([thumbRX,thumbRY,thumbRZ])
-    translate([0,space,0])
-    rotate([-30,0,90])
-    arc(40,1,space*1.8)
-    rotate([0,0,-90])
-    translate([0,-space*0.5+(fillerWidth*0.5),-caseZDiff])
-    KeyPlate(l=fillerWidth);
-    
-    translate([thumbX,thumbY,thumbZ])
-    rotate([thumbRX,thumbRY,thumbRZ])
-    translate([0,space,0])
-    rotate([-30,0,90])
-    arc(40,1,space*1.8)
-    rotate([0,20,-90])
-    translate([-space*0.6,-space*0.5,-caseZDiff*3])
-    KeyPlate(l=fillerWidth,w=space*0.4);
-    
-    
-    col1(-caseZDiff)arc(12,1,space*5.1,3)
-    translate([0,space*0.5,0])
-    KeyPlate(l=fillerWidth);
-  }
-  
-  hull(){
-    translate([thumbX,thumbY,thumbZ])
-    rotate([thumbRX,thumbRY,thumbRZ])
-    translate([0,0,space*0.105])
-    rotate([-30,12,90])
-    arc(40,1,space*1.8,1)
-    rotate([0,0,-90])
-    translate([0,space*0.1,-caseZDiff])
-    translate(leftFillerPlacement)
-    KeyPlate(w=fillerWidth,l=space*1.1);
-    
-    col1(-caseZDiff)arc(12,1,space*5.1,3)
-    translate(rightFillerPlacement)
-    KeyPlate(w=fillerWidth);
-  }
-
-}
-
-module fingerCase(){
-  fingerKeyPlates();
-  fingerPlateFillers();
-  fingerWalls();
-}
-module thumbCase(){
-  thumbKeyPlates();
-  thumbPlateFillers();
-  thumbWalls();
-}
-
-module upperCase(){
-  fingerCase();
-    
-  translate([thumbX,thumbY,thumbZ])
-  rotate([thumbRX,thumbRY,thumbRZ])
-  thumbCase();
-  
-  thumbToFinger();
-
-}
-
-
 module case(){
   if(showUpperCase){
-    upperCase();
+    keyPlates();
+    skirt();
+    
+//    col1(-caseZDiff)
+//    arc(12,1,plateSpace12Deg,0)
+//    translate(rightFillerPlacement)
+//    translate([-space*0.27,0,-fillerWidth])
+//    rotate([0,-90,0]){
+//      legMount();
+////      translate([0,0,1])legStart();
+//    }
+//    
+//    col1(-caseZDiff)
+//    arc(12,1,plateSpace12Deg,3)
+//    translate(rightFillerPlacement)
+//    translate([-space*0.27,0,-fillerWidth])
+//    rotate([0,-90,0]){
+////      legMount();
+////      translate([0,0,1])legStart();
+//    }
+//    
+//    col6(-caseZDiff)
+//    arc(12,1,plateSpace12Deg,0)
+//    translate(leftFillerPlacement)
+//    translate([space*0.27,0,-fillerWidth])
+//    rotate([0,90,0]){
+//      legMount();
+////      translate([0,0,1])legStart();
+//    }
+//    
+//    col6(-caseZDiff)
+//    arc(12,1,plateSpace12Deg,3)
+//    translate(leftFillerPlacement)
+//    translate([space*0.27,0,-fillerWidth])
+//    rotate([0,90,0]){
+//      legMount();
+//      
+////      translate([0,0,1])legStart();
+//    }
   }
-
-  
-  
 }
 
 module keyboard(){
-  if(showCut){
+    if(showCut){
     difference(){
       case();
       switchPlacement();
@@ -817,9 +1089,9 @@ if(showPrintBox){
 if(showCut){
   difference(){
     translate(keyboardPlacement)
-    rotate(keyboardRotation){
-      keyboard();
-    }
+    rotate(keyboardRotation)
+    keyboard();
+    
     translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
   }
 } else {
@@ -830,23 +1102,61 @@ if(showCut){
   %translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
 }
 
-module bottomCase(){
-  linear_extrude(convexity=10,height=caseThickness)
-  translate([keyboardPlacement[0],keyboardPlacement[1],0])
-  rotate([0,0,keyboardRotation[2]])
-  projection()
-  upperCase();
-}
 
-if(showBottomCase){
-
-  translate([-0,0,0])scale([1,1,1])bottomCase();
-}
-
-
+//difference(){
+//  thumbKeyPlates();
+//  thumbSwitchPlacement();
+//}
+//
+//
+//rotate(thumbRotation)
+//arc(40,2,space*1.9)rotate([0,0,90])difference(){
+//  translate([0,0,-caseZDiff])KeyPlate(w=space*1.25,rotateCap=true);
+//  Key(cap=1.25,rotateCap=false);
+//}
 
 
-//KeyPlate2();
-//translate([space*1.1,0,0])KeyPlate();
-//translate([0,space*1.1,0])KeyPlate();
-//translate([space*1.1,space*1.1,0])KeyPlate();
+//spaceing=space*1.9;
+//module KeyNPlate(cap=1){
+//  if(showCut){
+//    difference(){
+//      KeyPlate(w=space*cap);
+//      translate([0,0,caseZDiff])Key(cap=cap);
+//    }
+//  } else {
+//    KeyPlate(w=space*cap);
+//    translate([0,0,caseZDiff])Key(cap=cap);
+//  }
+//}
+//module curve(n=3,o=0){
+//
+//  difference(){
+//    arc(40,n,spaceing,o)rotate([0,0,-90])KeyNPlate();
+//  }
+//
+//  for(i=[o:o+n-2]){
+//    hull(){
+//      arc(40,1,spaceing,i)rotate([0,0,-90])translate(rightFillerPlacement)KeyPlate(w=fillerWidth);
+//      arc(40,1,spaceing,i+1)rotate([0,0,-90])translate(leftFillerPlacement)KeyPlate(w=fillerWidth);
+//    }
+//  }
+//  
+//}
+//
+////curve(n=2,o=-1);
+//arc(40,2,spaceing,-1)rotate([0,0,0])KeyNPlate(cap=1.25);
+////arc(40,1,spaceing,0)rotate([0,0,0])KeyNPlate(cap=1.25);
+//
+//hull(){
+//  arc(40,1,spaceing,-1)rotate([0,0,-90])translate(rightFillerPlacement)translate([-fillerWidth,0,0])KeyPlate(w=fillerWidth,l=space*1.25);
+//  arc(40,1,spaceing,0)rotate([0,0,-90])translate(leftFillerPlacement)translate([fillerWidth,0,0])KeyPlate(w=fillerWidth,l=space*1.25);
+//}
+//
+//rotate([0,0,90]){
+//  arc(40,1,spaceing*1.1,1)rotate([0,0,90])KeyNPlate();
+//  
+//  hull(){
+//    arc(40,1,spaceing,0)rotate([0,0,-90])translate(rightFillerPlacement)translate([-fillerWidth*2,0,0])KeyPlate(w=fillerWidth);
+//    arc(40,1,spaceing*1.1,1)rotate([0,0,-90])translate([space*0.505,0,0])KeyPlate(w=fillerWidth);
+//  }
+//}
