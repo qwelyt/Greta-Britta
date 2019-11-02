@@ -1447,7 +1447,7 @@ if(showCut){
   rotate(keyboardRotation)
   keyboard();
 
-  // %translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
+  %translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
 }
 
 
