@@ -61,7 +61,7 @@ module col3(addZ=0){
 //	translate([space*1.82,space*0,1.5+addZ])rotate([0,9,-2])
   translate([space*2,space*0,0+addZ])rotate([0,0,0])
   children();
-  
+
 }
 
 module col4(addZ=0){
@@ -108,7 +108,7 @@ module cherryCap(x=0,y=0,z=0, capSize=1, homing=false,rotateCap=false){
       }
     }
 	} else if(capSize==1.25){
-    
+
 		translate([x-0.819,y-0.8,z+3.5])
     rotate([0,0,capRotation])
 			import("keycap-dsa-1.25-row3-cherry.stl");
@@ -158,11 +158,11 @@ module mxSwitchCut(x=0,y=0,z=0,rotateCap=false){
         translate([d*0.5,0,0])cube([1,4,12],center=true);
         translate([-d*0.5,0,0])cube([1,4,12],center=true);
       }
-      
-     
+
+
       translate([0,-(p-0.6),1.8]) rotate([-10,0,0]) cube([cherryCutOutSize/2,1,1.6],center=true);
       translate([0,-(p-0.469),-1.95]) cube([cherryCutOutSize/2,1,6.099],center=true);
-      
+
       translate([0,(p-0.6),1.8]) rotate([10,0,0]) cube([cherryCutOutSize/2,1,1.6],center=true);
       translate([0,(p-0.469),-1.95]) cube([cherryCutOutSize/2,1,6.099],center=true);
     }
@@ -210,10 +210,10 @@ module legMount(h=space*1,r=1,spaceing=space,fn=30){
       translate([0,spaceing*0.4,0])cube([r*5,r,h*0.5],center=true);
       translate([0,0,-h*0.25])cube([r*5,spaceing*1.3,r],center=true);
     }
-    
+
     translate([0,0,h*0.15])rotate([90,0,0])cylinder(r=r*1.1,h=h*1.5,$fn=fn,center=true);
   }
-  
+
 }
 
 module legStart(h=space,fn=30){
@@ -228,7 +228,7 @@ module leg(h=space,fn=30){
     translate([0,0,-h*0.01])cylinder(r=1.5,h=h*0.4,$fn=fn);
   }
   translate([0,0,h])cylinder(r=1.3,h=h*0.3,$fn=fn);
-  
+
 }
 
 // ---- Keyboard ----
@@ -259,8 +259,8 @@ module thumbSwitchPlacement(){
     rotate([0,0,-90]){
       Key(cap=1.25,rotateCap=true);
     }
-    
-    
+
+
     arc(40,1,space*1.9,1)
     rotate([0,0,90])
     arc(40,1,(space*1.9)*1.1,1)
@@ -268,7 +268,7 @@ module thumbSwitchPlacement(){
       Key();
     }
   }
-  
+
 }
 
 module thumbPlacement(){
@@ -295,7 +295,7 @@ module thumbMid(){
   children();
 }
 
-  
+
 module thumbLeft(){
   thumbPlacement()
   arc(40,1,space*1.9,0)
@@ -309,7 +309,7 @@ module keyPlates(){
     arc(12,4,plateSpace12Deg)
     translate([0,0,-caseZDiff])
     KeyPlate();
-    
+
     col2()arc(12,4,plateSpace12Deg)translate([0,0,-caseZDiff])KeyPlate();
     col3()arc(12,5,plateSpace12Deg)translate([0,0,-caseZDiff])KeyPlate();
     col4()arc(12,5,plateSpace12Deg)translate([0,0,-caseZDiff])KeyPlate();
@@ -319,7 +319,7 @@ module keyPlates(){
       arc(12,4,plateSpace12Deg,1)translate([0,0,-caseZDiff])KeyPlate(w=space*1.25);
     }
   }
-  
+
   module fingerBackCol1(){
     col1()
     arc(12,1,plateSpace12Deg,3)
@@ -327,13 +327,13 @@ module keyPlates(){
     translate(backFillerPlacement)
     children();
   }
-  
+
   module fingerBackRight(){
     fingerBackCol1()
     translate(rightFillerPlacement)
     KeyPlate(w=fillerWidth,l=fillerWidth);
   }
-  
+
   module fingerBackCol2(){
     col2()
     arc(12,1,plateSpace12Deg,3)
@@ -341,7 +341,7 @@ module keyPlates(){
     translate(backFillerPlacement)
     children();
   }
-  
+
   module fingerBackCol3(){
     col3()
     arc(12,1,plateSpace12Deg,4)
@@ -349,11 +349,11 @@ module keyPlates(){
     translate(backFillerPlacement)
     children();
   }
-  
 
 
 
-  
+
+
   { // Thumb
     {
       { // Plates
@@ -362,33 +362,33 @@ module keyPlates(){
         translate([0,0,-caseZDiff])
         rotate([0,0,-90])
         KeyPlate(w=space*1.25,rotateCap=true);
-        
-        
+
+
         thumbFront()
         rotate([0,0,180])
         KeyPlate();
       }
-      
-      
+
+
       { // Fillers
         hull(){
           thumbLeft()
           translate(backFillerPlacement)
           translate([0,fillerWidth,0])
           KeyPlate(w=space*1.25,l=fillerWidth);
-          
+
           thumbMid()
           translate(frontFillerPlacement)
           translate([0,-fillerWidth,0])
           KeyPlate(w=space*1.25,l=fillerWidth);
         }
-        
+
         hull(){
           thumbMid()
           translate(rightFillerPlacement)
           translate([-fillerWidth*2.5,0,0])
           KeyPlate(w=fillerWidth);
-        
+
           thumbFront()
           translate(frontFillerPlacement)
           translate([0,-fillerWidth,0])
@@ -397,7 +397,7 @@ module keyPlates(){
       }
     }
   }
-  
+
   { // Finger <-> Thumb filler
     hull(){
       col1()
@@ -406,10 +406,10 @@ module keyPlates(){
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
+
       fingerBackRight();
-      
-      
+
+
       thumbFront()
       translate(rightFillerPlacement)
       translate(backFillerPlacement)
@@ -418,15 +418,15 @@ module keyPlates(){
     }
     hull(){
       fingerBackRight();
-      
-      
+
+
       thumbFront()
       translate(rightFillerPlacement)
       translate(backFillerPlacement)
       translate([-fillerWidth,0,0])
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
-      
+
+
       thumbFront()
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
@@ -435,16 +435,16 @@ module keyPlates(){
     }
     hull(){
       fingerBackRight();
-      
-      
+
+
       thumbFront()
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
       translate([-fillerWidth,0,0])
       translate([0,-fillerWidth,0])
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
-      
+
+
       thumbMid()
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
@@ -454,16 +454,16 @@ module keyPlates(){
     }
     hull(){
       fingerBackRight();
-      
-      
+
+
       thumbMid()
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       translate([0,-fillerWidth,0])
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
-      
+
+
       thumbLeft()
       translate(rightFillerPlacement)
       translate(backFillerPlacement)
@@ -471,19 +471,19 @@ module keyPlates(){
       translate([0,fillerWidth,0])
       KeyPlate(w=fillerWidth,l=fillerWidth);
     }
-    
+
      hull(){
       fingerBackRight();
-      
-      
+
+
       thumbLeft()
       translate(rightFillerPlacement)
       translate(backFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       translate([0,fillerWidth,0])
       KeyPlate(w=fillerWidth,l=fillerWidth);
-       
-      
+
+
       thumbLeft()
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
@@ -495,12 +495,12 @@ module keyPlates(){
       fingerBackCol1()
       translate(leftFillerPlacement)
       KeyPlate(w=fillerWidth,l=fillerWidth);
-    
+
       fingerBackCol2()
       translate(rightFillerPlacement)
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
-      
+
+
       thumbLeft()
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
@@ -512,34 +512,34 @@ module keyPlates(){
       fingerBackCol3()
       translate(rightFillerPlacement)
       KeyPlate(w=fillerWidth,l=fillerWidth);
-     
+
       fingerBackCol2()
       translate(leftFillerPlacement)
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
-      
+
+
       thumbLeft()
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       translate([0,-0.098,0])
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
+
     }
     hull(){
       fingerBackCol3()
       translate(rightFillerPlacement)
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
-      
+
+
       thumbLeft()
       translate(leftFillerPlacement)
       translate(frontFillerPlacement)
       translate([fillerWidth*1.5,0,0])
       translate([0,-0.098,0])
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
-      
+
+
       thumbLeft()
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
@@ -549,18 +549,18 @@ module keyPlates(){
     }
 
     hull(){
-      
+
       thumbLeft()
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       translate([0,-0.098,0])
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
+
       fingerBackCol2()
       translate(rightFillerPlacement)
       KeyPlate(w=fillerWidth,l=fillerWidth);
-      
+
       fingerBackCol2()
       translate(leftFillerPlacement)
       KeyPlate(w=fillerWidth,l=fillerWidth);
@@ -569,7 +569,7 @@ module keyPlates(){
 }
 
 module skirt(){
-  
+
   module dot(h=fillerWidth){
     cube([fillerWidth, fillerWidth, h],center=true);
   }
@@ -577,10 +577,10 @@ module skirt(){
     translate([0,0,-h*0.5])
     dot(h=h);
   }
-  
-  
+
+
   module oldrightSide(){
-    
+
     for(i=[0:1]){
       hull(){
         col1()
@@ -588,7 +588,7 @@ module skirt(){
         translate(rightFillerPlacement)
         translate(frontFillerPlacement)
         pin();
-        
+
         col1()
         arc(12,1,plateSpace12Deg,i)
         translate(rightFillerPlacement)
@@ -601,7 +601,7 @@ module skirt(){
         translate(rightFillerPlacement)
         translate(frontFillerPlacement)
         pin();
-        
+
         col1()
         arc(12,1,plateSpace12Deg,i)
         translate(rightFillerPlacement)
@@ -609,9 +609,9 @@ module skirt(){
         pin();
       }
     }
-    
 
-    
+
+
     module point(){
       col1()
       arc(12,1,plateSpace12Deg,2)
@@ -620,42 +620,42 @@ module skirt(){
       translate([-space*0.5,0,-(space*0.9-fillerWidth*0.5)])
       dot();
     }
-    
+
     hull(){
       col1()
       arc(12,1,plateSpace12Deg,2)
       translate(rightFillerPlacement)
       translate(frontFillerPlacement)
       pin();
-    
+
       point();
     }
-    
+
     hull(){
       point();
-      
+
       col1()
       arc(12,1,plateSpace12Deg,2)
       translate([0,0,-caseZDiff])
       translate(rightFillerPlacement)
       KeyPlate(w=fillerWidth);
     }
-    
+
     hull(){
       thumbFront()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
       dot(h=caseThickness);
-      
+
       thumbFront()
       translate(backFillerPlacement)
       translate(rightFillerPlacement)
       translate([0,0,-caseZDiff])
       dot(h=caseThickness);
-      
+
       point();
     }
-    
+
     hull(){
       col1()
       arc(12,1,plateSpace12Deg,3)
@@ -663,48 +663,48 @@ module skirt(){
       translate(frontFillerPlacement)
       translate([0,0,-caseZDiff])
       dot(h=caseThickness);
-      
+
       thumbFront()
       translate(backFillerPlacement)
       translate(rightFillerPlacement)
       translate([-fillerWidth,0,0])
       dot(h=caseThickness);
-      
+
       point();
     }
-    
+
     hull(){
       thumbFront()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
       dot(h=caseThickness);
-      
+
       thumbFront()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
       translate([0,0,-space*0.7])
       dot(h=caseThickness);
-      
+
       point();
     }
-    
+
     hull(){
       thumbFront()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
       dot(h=caseThickness);
-      
+
       thumbFront()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
       translate([0,0,-space*0.7])
       dot(h=caseThickness);
-    
+
       thumbFront()
       translate(frontFillerPlacement)
       translate(leftFillerPlacement)
       dot(h=caseThickness);
-      
+
       thumbFront()
       translate(frontFillerPlacement)
       translate(leftFillerPlacement)
@@ -723,7 +723,7 @@ module skirt(){
       translate(leftFillerPlacement)
       translate([0,0,-space*0.7])
       dot(h=caseThickness);
-      
+
       thumbFront()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
@@ -737,55 +737,55 @@ module skirt(){
       dot(h=caseThickness);
     }
 
-    
+
     hull(){
       thumbMid()
       translate(backFillerPlacement)
       translate(rightFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       dot(h=caseThickness);
-      
+
       thumbMid()
       translate(backFillerPlacement)
       translate(rightFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       translate([0,0,-space])
       dot(h=caseThickness);
-      
+
       thumbFront()
       translate(frontFillerPlacement)
       translate(leftFillerPlacement)
       translate([0,-fillerWidth*1,0])
       dot(h=caseThickness);
-      
+
       thumbFront()
       translate(frontFillerPlacement)
       translate(leftFillerPlacement)
       translate([0,0,-space*0.7])
-      
+
       dot(h=caseThickness);
     }
-    
+
     hull(){
       thumbFront()
       translate(frontFillerPlacement)
       translate(leftFillerPlacement)
       translate([0,0,-space*0.7])
       dot(h=caseThickness);
-      
+
       thumbFront()
       translate(frontFillerPlacement)
       translate(leftFillerPlacement)
       translate([-space*0.6,-space*2,-space*3])
       dot(h=caseThickness);
-    
+
       thumbMid()
       translate(backFillerPlacement)
       translate(rightFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       translate([0,0,-space])
       dot(h=caseThickness);
-    
+
       thumbMid()
       translate(backFillerPlacement)
       translate(rightFillerPlacement)
@@ -793,28 +793,28 @@ module skirt(){
       translate([0,-space*0.5,-space*3.3])
       dot(h=caseThickness);
     }
-    
+
     hull(){
       thumbMid()
       translate(backFillerPlacement)
       translate(rightFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       dot(h=caseThickness);
-    
+
       thumbMid()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
       translate([fillerWidth*1.586,0,0])
       dot(h=caseThickness);
-    
-      
+
+
       thumbMid()
       translate(backFillerPlacement)
       translate(rightFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       translate([0,0,-space])
       dot(h=caseThickness);
-    
+
       thumbMid()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
@@ -822,7 +822,7 @@ module skirt(){
       translate([0,0,-space])
       dot(h=caseThickness);
     }
-    
+
     hull(){
       thumbMid()
       translate(backFillerPlacement)
@@ -830,21 +830,21 @@ module skirt(){
       translate([-fillerWidth*2.5,0,0])
       translate([0,0,-space])
       dot(h=caseThickness);
-    
+
       thumbMid()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
       translate([fillerWidth*1.586,0,0])
       translate([0,0,-space])
       dot(h=caseThickness);
-      
+
       thumbMid()
       translate(backFillerPlacement)
       translate(rightFillerPlacement)
       translate([-fillerWidth*2.5,0,0])
       translate([0,-space*0.5,-space*3.3])
       dot(h=caseThickness);
-    
+
       thumbMid()
       translate(backFillerPlacement)
       translate(leftFillerPlacement)
@@ -852,13 +852,49 @@ module skirt(){
       translate([0,0,-space*3])
       dot(h=caseThickness);
     }
-    
 
-    
+
+
   }
-  
-  
+
+
   module rightSide(){
+    module flyingPointFront(){
+        col1()
+        arc(12,1,plateSpace12Deg,1)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        translate([0,0,-space*2])
+        dot(h=caseThickness);
+    }
+    module flyingPoint(){
+        arc(12,1,plateSpace12Deg,2)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        translate([-space*1, space, -space])
+        dot(h=caseThickness);
+    }
+    module bottomFlyingPoint(){
+        translate([space*1.55,space,-space*3.0])
+        flyingPoint();
+    }
+    module rearFlyingPoint(){
+        arc(12,1,plateSpace12Deg,3)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        translate([-space*1.22, space, -space])
+        dot();
+    }
+    module thumbFrontFlyingPoint(){
+        thumbFront()
+        translate(frontFillerPlacement)
+        translate(leftFillerPlacement)
+        translate([fillerWidth,0,-space*0.5])
+        dot(h=caseThickness);
+    }
     module fingerToThumb(){
       hull(){
         col1()
@@ -867,18 +903,18 @@ module skirt(){
         translate(rightFillerPlacement)
         translate(frontFillerPlacement)
         dot(h=caseThickness);
-      
+
         thumbFront()
         translate(backFillerPlacement)
         translate(leftFillerPlacement)
         dot(h=caseThickness);
-      
+
         thumbFront()
         translate(backFillerPlacement)
         translate(rightFillerPlacement)
         dot(h=caseThickness);
       }
-      
+
       hull(){
         col1()
         arc(12,1,plateSpace12Deg,2)
@@ -886,23 +922,335 @@ module skirt(){
         translate(rightFillerPlacement)
         translate(frontFillerPlacement)
         dot(h=caseThickness);
-      
+
         col1()
         arc(12,1,plateSpace12Deg,2)
         translate([0,0,-caseZDiff])
         translate(rightFillerPlacement)
         translate(backFillerPlacement)
         dot(h=caseThickness);
-      
+
         thumbFront()
         translate(backFillerPlacement)
         translate(rightFillerPlacement)
         dot(h=caseThickness);
       }
+
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,2)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        dot(h=caseThickness);
+
+        flyingPoint();
+
+        thumbFront()
+        translate(backFillerPlacement)
+        translate(leftFillerPlacement)
+        dot(h=caseThickness);
+
+      }
+      hull(){
+        rearFlyingPoint();
+
+        thumbFront()
+        translate(backFillerPlacement)
+        translate(leftFillerPlacement)
+        dot(h=caseThickness);
+
+        thumbFront()
+        translate(frontFillerPlacement)
+        translate(leftFillerPlacement)
+        dot(h=caseThickness);
+      }
+      hull() {
+        rearFlyingPoint();
+
+        thumbFront()
+        translate(backFillerPlacement)
+        translate(leftFillerPlacement)
+        dot(h=caseThickness);
+
+        flyingPoint();
+      }
     }
-  
+    module thumbSkirt(){
+      hull() {
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(leftFillerPlacement)
+        translate([fillerWidth*1.5868,0,0])
+        dot(h=caseThickness);
+
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(leftFillerPlacement)
+        translate([fillerWidth*2.5,0,0])
+        translate([0,fillerWidth,0])
+        translate([0,0,-space])
+        dot(h=caseThickness);
+
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([0,0,-space])
+        translate([0,fillerWidth,0])
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+      }
+
+      hull() {
+
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([0,0,-space])
+        translate([0,fillerWidth,0])
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+
+        thumbFrontFlyingPoint();
+
+      }
+      hull() {
+        
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+
+        thumbFront()
+        translate(frontFillerPlacement)
+        translate(leftFillerPlacement)
+        dot(h=caseThickness);
+
+
+        thumbFrontFlyingPoint();
+      }
+      hull(){
+        thumbFrontFlyingPoint();
+
+        thumbFront()
+        translate(frontFillerPlacement)
+        translate(leftFillerPlacement)
+        dot(h=caseThickness);
+
+        rearFlyingPoint();
+      }
+
+      hull(){
+        thumbFrontFlyingPoint();
+
+        rearFlyingPoint();
+
+        bottomFlyingPoint();
+      }
+
+      hull(){
+        bottomFlyingPoint();
+        flyingPoint();
+        rearFlyingPoint();
+      }
+
+      hull(){
+        bottomFlyingPoint();
+        thumbFrontFlyingPoint();
+
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([0,0,-space])
+        translate([0,fillerWidth,0])
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+      }
+
+      hull(){
+
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([0,0,-space])
+        translate([0,fillerWidth,0])
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(leftFillerPlacement)
+        translate([fillerWidth*2.5,0,0])
+        translate([0,fillerWidth,0])
+        translate([0,0,-space])
+        dot(h=caseThickness);
+
+        
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([0,0,-space*3])
+        translate([0,-fillerWidth*2,0])
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(leftFillerPlacement)
+        translate([fillerWidth*2.5,0,0])
+        translate([0,fillerWidth,0])
+        translate([0,0,-space*3])
+        dot(h=caseThickness);
+        
+      }
+
+      hull(){
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([0,0,-space])
+        translate([0,fillerWidth,0])
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+        
+        thumbMid()
+        translate(backFillerPlacement)
+        translate(rightFillerPlacement)
+        translate([0,0,-space*3])
+        translate([0,-fillerWidth*2,0])
+        translate([-fillerWidth*2.5,0,0])
+        dot(h=caseThickness);
+
+        bottomFlyingPoint();
+      }
+    }
+
+    module fingerSkirt(){
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,2)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        dot(h=caseThickness);
+
+        flyingPointFront();
+        
+        flyingPoint();
+      }
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,1)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(backFillerPlacement)
+        dot(h=caseThickness);
+
+        col1()
+        arc(12,1,plateSpace12Deg,1)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        dot(h=caseThickness);
+
+        flyingPointFront();
+        
+      }
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,0)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(backFillerPlacement)
+        dot(h=caseThickness);
+
+        col1()
+        arc(12,1,plateSpace12Deg,0)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        dot(h=caseThickness);
+
+        flyingPointFront();
+        
+      }
+
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,0)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        dot(h=caseThickness);
+
+        flyingPointFront();
+
+        col1()
+        arc(12,1,plateSpace12Deg,0)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        translate([0,0,-space*2])
+        dot(h=caseThickness);
+
+      }
+
+      hull(){
+        flyingPointFront();
+        flyingPoint();
+        bottomFlyingPoint();
+      }
+
+      hull(){
+        flyingPointFront();
+        bottomFlyingPoint();
+
+        col1()
+        arc(12,1,plateSpace12Deg,0)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        translate([0,0,-space*2])
+        dot(h=caseThickness);
+      }
+
+      hull(){
+        col1()
+        arc(12,1,plateSpace12Deg,0)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        translate([0,0,-space*2])
+        dot(h=caseThickness);
+        
+        bottomFlyingPoint();
+
+        col1()
+        arc(12,1,plateSpace12Deg,0)
+        translate([0,0,-caseZDiff])
+        translate(rightFillerPlacement)
+        translate(frontFillerPlacement)
+        translate([space,space,-space*4])
+        dot(h=caseThickness);
+      }
+    }
+
     fingerToThumb();
-    
+    thumbSkirt();
+    fingerSkirt();
   }
   module leftSide(){
     module col6WallLine(o,x,y,z,rZ){
@@ -922,7 +1270,7 @@ module skirt(){
         translate(backFillerPlacement)
         translate([space*0.125,0,0])
         dot();
-        
+
         col6()
         rotate([
           -keyboardRotation[0]
@@ -936,7 +1284,7 @@ module skirt(){
         pin(h=space*1.125);
       }
     }
-    
+
     hull(){ // 1u on col6
       col6()
       arc(12,1,plateSpace12Deg)
@@ -952,7 +1300,7 @@ module skirt(){
       translate(backFillerPlacement)
       dot();
 
-      
+
       col6()
       arc(12,1,plateSpace12Deg)
       translate([0,0,-caseZDiff])
@@ -960,7 +1308,7 @@ module skirt(){
       translate(frontFillerPlacement)
       translate([space*0.36,0,-space*0.9])
       dot();
-      
+
       col6()
       arc(12,1,plateSpace12Deg)
       translate([0,0,-caseZDiff])
@@ -976,7 +1324,7 @@ module skirt(){
       translate(leftFillerPlacement)
       translate(backFillerPlacement)
       dot();
-      
+
       col6()
       arc(12,1,plateSpace12Deg,1)
       translate([0,0,-caseZDiff*0.5])
@@ -984,7 +1332,7 @@ module skirt(){
       translate(frontFillerPlacement)
       translate([space*0.125,0,0])
       dot();
-      
+
       col6()
       arc(12,1,plateSpace12Deg)
       translate([0,0,-caseZDiff])
@@ -992,7 +1340,7 @@ module skirt(){
       translate(backFillerPlacement)
       translate([space*0.47,0,-space*0.5])
       dot();
-      
+
       col6()
       arc(12,1,plateSpace12Deg,1)
       translate([0,0,-caseZDiff])
@@ -1002,17 +1350,17 @@ module skirt(){
       rotate([0,-35,-0])
       dot();
     }
-    
+
     col6WallLine(1,space*0.199,-space*0.6,-space*1.3,0);
     col6WallLine(2,space*0.199,-space*0.5,-space*1.3,-5);
     col6WallLine(3,space*0.275,-space*0.5,-space*1.32,-10);
     col6WallLine(4,space*0.4599,-space*0.5,-space*1.4,-15);
 
 
-    
-    
+
+
   }
-  
+
 //  oldrightSide();
   rightSide();
   leftSide();
@@ -1028,7 +1376,7 @@ module case(){
   if(showUpperCase){
     keyPlates();
     skirt();
-    
+
 //    col1(-caseZDiff)
 //    arc(12,1,plateSpace12Deg,0)
 //    translate(rightFillerPlacement)
@@ -1037,7 +1385,7 @@ module case(){
 //      legMount();
 ////      translate([0,0,1])legStart();
 //    }
-//    
+//
 //    col1(-caseZDiff)
 //    arc(12,1,plateSpace12Deg,3)
 //    translate(rightFillerPlacement)
@@ -1046,7 +1394,7 @@ module case(){
 ////      legMount();
 ////      translate([0,0,1])legStart();
 //    }
-//    
+//
 //    col6(-caseZDiff)
 //    arc(12,1,plateSpace12Deg,0)
 //    translate(leftFillerPlacement)
@@ -1055,14 +1403,14 @@ module case(){
 //      legMount();
 ////      translate([0,0,1])legStart();
 //    }
-//    
+//
 //    col6(-caseZDiff)
 //    arc(12,1,plateSpace12Deg,3)
 //    translate(leftFillerPlacement)
 //    translate([space*0.27,0,-fillerWidth])
 //    rotate([0,90,0]){
 //      legMount();
-//      
+//
 ////      translate([0,0,1])legStart();
 //    }
   }
@@ -1091,15 +1439,15 @@ if(showCut){
     translate(keyboardPlacement)
     rotate(keyboardRotation)
     keyboard();
-    
+
     translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
   }
 } else {
   translate(keyboardPlacement)
   rotate(keyboardRotation)
   keyboard();
-  
-  %translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
+
+  // %translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
 }
 
 
@@ -1140,7 +1488,7 @@ if(showCut){
 //      arc(40,1,spaceing,i+1)rotate([0,0,-90])translate(leftFillerPlacement)KeyPlate(w=fillerWidth);
 //    }
 //  }
-//  
+//
 //}
 //
 ////curve(n=2,o=-1);
@@ -1154,7 +1502,7 @@ if(showCut){
 //
 //rotate([0,0,90]){
 //  arc(40,1,spaceing*1.1,1)rotate([0,0,90])KeyNPlate();
-//  
+//
 //  hull(){
 //    arc(40,1,spaceing,0)rotate([0,0,-90])translate(rightFillerPlacement)translate([-fillerWidth*2,0,0])KeyPlate(w=fillerWidth);
 //    arc(40,1,spaceing*1.1,1)rotate([0,0,-90])translate([space*0.505,0,0])KeyPlate(w=fillerWidth);
