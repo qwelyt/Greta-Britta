@@ -2280,30 +2280,93 @@ module cutterShortSkirt(){
   cube([printerSize[0]*1.2,printerSize[1], 32], center=true);
 }
 
-if(showCut){
-  union(){
-    difference(){
+module top(){
+  if(showCut){
+    union(){
+      difference(){
+        translate(keyboardPlacement)
+        rotate(keyboardRotation)
+        keyboard();
+
+        if(skirt == "SHORT"){
+          cutterShortSkirt();
+        } else {
+          translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
+        }
+      }
+    }
+  } else {
       translate(keyboardPlacement)
       rotate(keyboardRotation)
       keyboard();
 
+
       if(skirt == "SHORT"){
-        cutterShortSkirt();
+        %cutterShortSkirt();
       } else {
-        translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
+        %translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
       }
-    }
   }
-} else {
-    translate(keyboardPlacement)
-    rotate(keyboardRotation)
-    keyboard();
-
-
-    if(skirt == "SHORT"){
-      %cutterShortSkirt();
-    } else {
-      %translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
-    }
-
 }
+
+module flatTop(){
+  translate([0,0,-16.1])rotate([0,-13.999,0])
+      difference(){
+        translate(keyboardPlacement)
+        rotate(keyboardRotation)
+        keyboard();
+
+        if(skirt == "SHORT"){
+          cutterShortSkirt();
+        } else {
+          translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
+        }
+      }
+}
+
+module topNoCuts(){
+  translate([0,0,-16.1])rotate([0,-13.999,0])
+      difference(){
+        translate(keyboardPlacement)
+        rotate(keyboardRotation)
+        case();
+
+        if(skirt == "SHORT"){
+          cutterShortSkirt();
+        } else {
+          translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
+        }
+      }
+}
+
+// top();
+
+// topNoCuts();
+// flatTop();
+
+// %translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
+
+  // rotate([0,keyboardRotation[1]*0.46666,0])
+// linear_extrude(height=10,slices=10)
+  // projection(false)topNoCuts();
+module bottom(h=3){
+  module b1(){
+    linear_extrude(height=1, scale=[0,0], slices=1, twist=0)
+    projection(true)topNoCuts();
+  }
+  module b2(){
+    linear_extrude(height=h, scale=[1,1], slices=1, twist=0)
+    projection()b1();
+  }
+  b2();
+}  
+
+difference(){
+  translate([0,0,-2])bottom(3);
+  topNoCuts();
+}
+// translate([0,0,-2])bottom(2);
+
+// linear_extrude(height=10, scale=[1,1], slices=10, twist=0)
+
+  // translate([0,0,-2])topNoCuts();
