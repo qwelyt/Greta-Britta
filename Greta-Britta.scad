@@ -2238,7 +2238,6 @@ module skirt(){
       dot(h=caseThickness);
     }
   }
-//  oldrightSide();
   rightSide();
   leftSide();
   frontSide();
@@ -2251,22 +2250,60 @@ module switchPlacement(){
   thumbSwitchPlacement();
 }
 
-module case(){
+module upperCaseBuild(){
   if(showUpperCase){
     keyPlates();
     skirt();
   }
 }
 
-module keyboard(){
-    if(showCut){
+module upperCase(showCut=false){
+  if(showCut){
     difference(){
-      case();
+      upperCaseBuild();
       switchPlacement();
     }
   } else {
-    case();
+    upperCaseBuild();
     switchPlacement();
+  }
+}
+
+module bottomMould(h=3){
+  module b1(){
+    linear_extrude(height=1, scale=[0,0], slices=1, twist=0)
+    projection(true)topNoCuts();
+  }
+  module b2(){
+    linear_extrude(height=h, scale=[1,1], slices=1, twist=0)
+    projection()b1();
+  }
+  b2();
+}  
+
+module topNoCuts(){
+  translate([0,0,-16.1])rotate([0,-13.999,0])
+      difference(){
+        translate(keyboardPlacement)
+        rotate(keyboardRotation)
+        upperCaseBuild();
+
+        if(skirt == "SHORT"){
+          cutterShortSkirt();
+        } else {
+          translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
+        }
+      }
+}
+
+module bottomCase(){
+  difference(){
+    translate([0,0,-2])bottomMould(5);
+    topNoCuts();
+    scaleA=1.02;
+    scale([scaleA,scaleA])topNoCuts();
+    scaleB=scaleA+0.02;
+    scale([scaleB,scaleB])topNoCuts();
   }
 }
 
@@ -2280,13 +2317,13 @@ module cutterShortSkirt(){
   cube([printerSize[0]*1.2,printerSize[1], 32], center=true);
 }
 
-module top(){
+module top(showCut=false){
   if(showCut){
     union(){
       difference(){
         translate(keyboardPlacement)
         rotate(keyboardRotation)
-        keyboard();
+        upperCase(showCut);
 
         if(skirt == "SHORT"){
           cutterShortSkirt();
@@ -2298,7 +2335,7 @@ module top(){
   } else {
       translate(keyboardPlacement)
       rotate(keyboardRotation)
-      keyboard();
+      upperCase();
 
 
       if(skirt == "SHORT"){
@@ -2308,65 +2345,20 @@ module top(){
       }
   }
 }
-
-module flatTop(){
-  translate([0,0,-16.1])rotate([0,-13.999,0])
-      difference(){
-        translate(keyboardPlacement)
-        rotate(keyboardRotation)
-        keyboard();
-
-        if(skirt == "SHORT"){
-          cutterShortSkirt();
-        } else {
-          translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
-        }
-      }
+module bottom(){
+  rotate([0,keyboardRotation[1]*0.46666,0])
+  bottomCase();
 }
 
-module topNoCuts(){
-  translate([0,0,-16.1])rotate([0,-13.999,0])
-      difference(){
-        translate(keyboardPlacement)
-        rotate(keyboardRotation)
-        case();
-
-        if(skirt == "SHORT"){
-          cutterShortSkirt();
-        } else {
-          translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
-        }
-      }
+module flatTop(showCut=true){
+  rotate([0,-keyboardRotation[1]*0.46666,0])
+  translate([-4,0,-15.5])
+  top(showCut);
 }
 
-// top();
+module flatBottom(){
+  bottomCase();
+}
 
-// topNoCuts();
 // flatTop();
-
-// %translate([0,0,-5])cube([printerSize[0],printerSize[1],10],center=true);
-
-  // rotate([0,keyboardRotation[1]*0.46666,0])
-// linear_extrude(height=10,slices=10)
-  // projection(false)topNoCuts();
-module bottom(h=3){
-  module b1(){
-    linear_extrude(height=1, scale=[0,0], slices=1, twist=0)
-    projection(true)topNoCuts();
-  }
-  module b2(){
-    linear_extrude(height=h, scale=[1,1], slices=1, twist=0)
-    projection()b1();
-  }
-  b2();
-}  
-
-difference(){
-  translate([0,0,-2])bottom(3);
-  topNoCuts();
-}
-// translate([0,0,-2])bottom(2);
-
-// linear_extrude(height=10, scale=[1,1], slices=10, twist=0)
-
-  // translate([0,0,-2])topNoCuts();
+// flatBottom();
