@@ -1,4 +1,5 @@
 include<Greta-Britta.scad>;
+include<joystick.scad>;
 
 module screwHole(h=10,m=3,hat=2){
   cylinder(h=h,d=m,$fn=30);
@@ -8,18 +9,23 @@ module screwHole(h=10,m=3,hat=2){
 
 // screwHole();
 
-// translate([0,0,2.6])
-// %flatTop();
+translate([0,0,2.6])
+%flatTop();
 
-difference(){
-  translate([0,0,2.5])flatBottom();
+// difference(){
+//   translate([0,0,2.5])flatBottom();
 
-  translate([-space*3.3,space*3.3,0])screwHole();
-  translate([space*3.1,space*3.1,0])screwHole();
-  translate([0,space*3.3,0])screwHole();
+//   translate([-space*3.3,space*3.3,0])screwHole();
+//   translate([space*3.1,space*3.1,0])screwHole();
+//   translate([0,space*3.3,0])screwHole();
 
-  translate([-space*2.87,-space*3,0])screwHole();
-  translate([0,-space*3.2,0])screwHole();
-  translate([space*3.1,-space*2.2,0])screwHole();
+//   translate([-space*2.87,-space*3,0])screwHole();
+//   translate([0,-space*3.2,0])screwHole();
+//   translate([space*3.1,-space*2.2,0])screwHole();
 
-}
+// }
+
+translate([-space*3.68,space*2.65,10])
+rotate([90,0,-90])
+rotate([-9, -22.5, 0])
+joystick();
