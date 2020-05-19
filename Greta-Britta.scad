@@ -2305,7 +2305,7 @@ module topNoCuts(){
 
 module bottomCase(){
   difference(){
-    translate([0,0,-2])bottomMould(5);
+    translate([0,0,-3])bottomMould(6);
     topNoCuts();
     scaleA=1.02;
     scale([scaleA,scaleA])topNoCuts();
@@ -2368,7 +2368,7 @@ module screwPoints(ri=3,holes=false){
   module point(){
     cube([1,1,1],center=true);
   }  
-  holeZ=-1.6;
+  holeZ=-2.6;
   // Back right
   translate([-70.5,35,4]){
     rotate([0,0,180])screwInWithMount(ri=ri);
