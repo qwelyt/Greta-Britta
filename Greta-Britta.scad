@@ -126,17 +126,17 @@ module screwIn(ro=5,ri=2,h=5){
     translate([0,0,-((h/2))])cylinder(r1=3,r2=2,h=1,$fn=30,center=true);
   }
 }
-module screwInWithMount(h=8,d=10,ri=2){
+module screwInWithMount(h=8,d=12,ri=3){
   difference(){
     cylinder(d=d,h=h,$fn=30,center=true);
     translate([d,0,0])cube([d*2,d*2,h+1],center=true);
     cylinder(r=ri,h=h+1,$fn=30,center=true);
-    translate([0,0,-((h/2))])cylinder(r1=3,r2=2,h=1,$fn=30,center=true);
+    translate([0,0,-((h/2))])cylinder(r1=ri+(ri/2),r2=ri,h=1,$fn=30,center=true);
   }
   difference(){
     translate([d/4,0,0])cube([d/2,d-0.055,h],center=true);
     cylinder(r=ri,h=h+1,$fn=30,center=true);
-    translate([0,0,-((h/2))])cylinder(r1=3,r2=2,h=1,$fn=30,center=true);
+    translate([0,0,-((h/2))])cylinder(r1=ri+(ri/2),r2=ri,h=1,$fn=30,center=true);
   }
 }
 
@@ -2259,7 +2259,7 @@ module switchPlacement(){
 
 module upperCaseBuild(){
   if(showUpperCase){
-    keyPlates();
+    //keyPlates();
     union(){skirt();}
   }
 }
@@ -2362,51 +2362,72 @@ module flatTop(showCut=true){
   translate([-4,0,-15.5])
   top(showCut);
 
+}
+
+module screwPoints(ri=3,holes=false){
   module point(){
     cube([1,1,1],center=true);
   }  
-  
+  holeZ=-1.6;
   // Back right
-  translate([-71.5,35,4]){
-    rotate([0,0,180])screwInWithMount();
+  translate([-70.5,35,4]){
+    rotate([0,0,180])screwInWithMount(ri=ri);
+    if(holes){
+      translate([0,0,holeZ]){
+        cylinder(r=ri,h=8+1,$fn=30,center=true);
+        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
+      }
+    }
   }
   
   // Back "mid"
   translate([-30,58,4])rotate([0,0,90]){
-    screwInWithMount();
+    screwInWithMount(ri=ri);
+    if(holes){
+      translate([0,0,holeZ]){
+        cylinder(r=ri,h=8+1,$fn=30,center=true);
+        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
+      }
+    }
     hull(){
-      translate([4.5,-4.4752,-3.5])point();
-      translate([4.5,-4.4752,3.5])point();
+      translate([4.5,-5.4752,-3.5])point();
+      translate([4.5,-5.4752,3.5])point();
 
-      translate([8.5,-4.4752,-3.5])point();
-      translate([7,-4.4752,3.5])point();
+      translate([8.5,-5.4752,-3.5])point();
+      translate([7,-5.4752,3.5])point();
 
-      translate([4.5,4.4752,-3.5])point();
-      translate([4.5,4.4752,3.5])point();
+      translate([4.5,5.4752,-3.5])point();
+      translate([4.5,5.4752,3.5])point();
 
-      translate([8.5,4.4752,-3.5])point();
-      translate([6.5,4.4752,3.5])point();
+      translate([8.5,5.4752,-3.5])point();
+      translate([6.4,5.4752,3.5])point();
     }
   }
 
   // Front right
-  translate([-51.5,-56,4]){
-    rotate([0,0,190])screwInWithMount();
-
-    hull(){
-      translate([4.44,0,3.5])point();
-      translate([4.44,0,-3.5])point();
-
-      translate([4.44,-7,3.5])point();
-      translate([4.44,-7,-3.5])point();
+  translate([-51,-55.5,4]){
+    rotate([0,0,190])screwInWithMount(ri=ri);
+    if(holes){
+      translate([0,0,holeZ]){
+        cylinder(r=ri,h=8+1,$fn=30,center=true);
+        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
+      }
     }
 
     hull(){
-      translate([4.44,-3,3.5])point();
-      translate([4.44,-3,-3.5])point();
+      translate([5.44,0,3.5])point();
+      translate([5.44,0,-3.5])point();
 
-      translate([4.44,-7,3.5])point();
-      translate([4.44,-7,-3.5])point();
+      translate([5.44,-7,3.5])point();
+      translate([5.44,-7,-3.5])point();
+    }
+
+    hull(){
+      translate([5.44,-3,3.5])point();
+      translate([5.44,-3,-3.5])point();
+
+      translate([5.44,-7,3.5])point();
+      translate([5.44,-7,-3.5])point();
 
       translate([0,-6,3.5])point();
       translate([0,-6,-3.5])point();
@@ -2414,75 +2435,104 @@ module flatTop(showCut=true){
 
     hull(){
       rotate([0,0,190]){
-        translate([4,-4.4725,-3.5])point();
-        translate([7,-4.4725,-3.5])point();
+        translate([4.5,-5.4725,-3.5])point();
+        translate([7,-5.4725,-3.5])point();
 
-        translate([4,4.4725,-3.5])point();
+        translate([4,5.4725,-3.5])point();
         translate([7,4.4725,-3.5])point();
 
         
-        translate([5.5,-4.4725,2])point();
-        translate([5.5,4.4725,2])point();
+        translate([5.5,-5.4725,2])point();
+        translate([5.5,5.4725,2])point();
       }
     }
   }
   
   // Back left
-  translate([55.9,56,4]){
-    screwInWithMount();
+  translate([54.5,55,4]){
+    screwInWithMount(ri=ri);
+    if(holes){
+      translate([0,0,holeZ]){
+        cylinder(r=ri,h=8+1,$fn=30,center=true);
+        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
+      }
+    }
 
     hull(){
-      translate([4,-4.4725,-3.5])point();
-      translate([6.5,-4.4725,-3.5])point();
-      translate([4,-4.4725,3.5])point();
+      translate([5,-5.4725,-3.5])point();
+      translate([6.5,-5.4725,-3.5])point();
+      translate([4,-5.4725,3.5])point();
 
-      translate([4.5,4.4,3.5])point();
-      translate([4,4.4725,-3.5])point();
-      translate([6.5,4.4725,-3.5])point();
+      translate([5,5.4,3.5])point();
+      translate([5,5.4725,-3.5])point();
+      translate([8.9,5.4725,-3.5])point();
     }
 
     hull(){    
-      translate([-4.44,0,3.5])point();
-      translate([-4.44,9,3.5])point();
+      translate([-5.44,0,3.5])point();
+      translate([-5.44,10,3.5])point();
 
-      translate([-4.44,0,-3.5])point();
-      translate([-4.44,9,-3.5])point();
+      translate([-5.44,0,-3.5])point();
+      translate([-5.44,11,-3.5])point();
     }
 
     hull(){
-      translate([-4.44,3,-3.5])point();
-      translate([-4.44,3,3.5])point();
+      translate([-4.44,4,-3.5])point();
+      translate([-4.44,4,3.5])point();
 
-      translate([6.5,4.4725,-3.5])point();
-      translate([4,4.4725,3.5])point();
+      translate([8.9,5.4725,-3.5])point();
+      translate([4,5.4725,3.5])point();
 
-      translate([-4.44,9,-3.5])point();
-      translate([-4.44,9,3.5])point();
+      translate([-4.44,11,-3.5])point();
+      translate([-4.44,10,3.5])point();
     }
   }
 
   // Front left
-  translate([59,-38.3,4]){
-    screwInWithMount();
+  translate([57,-37.3,4]){
+    screwInWithMount(ri=ri);
+    
+    if(holes){
+      translate([0,0,holeZ]){
+        cylinder(r=ri,h=8+1,$fn=30,center=true);
+        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
+      }
+    }
+    
     hull(){
-      translate([0,0,-3.5]){
-        translate([-4.4,-1.2,0])point();
-        translate([5,-6.3,0])point();
-        translate([-4,-9,0])point();
-      }
-      translate([0,0,3.5]){
-        translate([-4.45,-0.5,0])point();
-        translate([2,-5,0])point();
-        translate([-4,-9,0])point();
-      }
+      translate([-5.4,0,-3.5])point();
+      translate([-5,-12.5,-3.5])point();
+      
+      translate([-5.45,0,3.5])point();
+      translate([-5,-11.5,3.5])point();
+    }
+
+    hull(){
+      translate([-5,-4,-3.5])point();
+      translate([-5,-4,3.5])point();
+
+      translate([-5,-11.5,3.5])point();
+      translate([-5,-12.5,-3.5])point();
+
+      translate([6,-7,-3.5])point();
+      translate([3,-6,3.5])point();
+
+      translate([6,-4.5,-3.5])point();
+      translate([3,-4,3.5])point();
     }
   }
 }
 
 module flatBottom(){
-  bottomCase();
+  difference(){
+    bottomCase();
+    screwPoints(ri=0);
+    screwPoints(ri=3, holes=true);
+  }
 }
 
-flatTop();
- //flatBottom();
+//flatTop();
+//screwPoints();
+flatBottom();
+//screwPoints();
 
