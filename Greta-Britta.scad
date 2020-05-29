@@ -44,41 +44,38 @@ cherrySize=14.58;
 showPrintBox=false;
 printerSize=[140,140,140];
 
+// mX: h=mX-1, d= X*(1+((1/3)*2))
+function mNutH(m) = m-1;
+function mNutD(m) = m*(1+((1/3)*2));
 
 // ---- Columns ----
 module col1(addZ=0,rotation=[0,15,0]){
-//	translate([space*0,space*0,22.5+addZ])rotate(rotation)
   translate([space*0,space*0.5,0+addZ])rotate([6,0,0])
   children();
 }
 
 module col2(addZ=0,rotation=[0,12,-1]){
-//	translate([space*0.96,space*0,14.7+addZ])rotate(rotation)
   translate([space*1,space*0.25,0+addZ])rotate([3,0,0])
   children();
 }
 
 module col3(addZ=0){
-//	translate([space*1.82,space*0,1.5+addZ])rotate([0,9,-2])
   translate([space*2,space*0,0+addZ])rotate([0,0,0])
   children();
 
 }
 
 module col4(addZ=0){
-//	translate([space*2.933,space*0,1.5+addZ])rotate([0,6,-3.2])
   translate([space*3,space*0.25,0+addZ])rotate([3,0,0])
   children();
 }
 
 module col5(addZ=0){
-//	translate([space*4.063,space*0,10+addZ])rotate([0,3,-4.6])
   translate([space*4,space*0.5,0+addZ])rotate([6,0,0])
   children();
 }
 
 module col6(addZ=0){
-//	translate([plateSpace12Deg1,space*0,9.5+addZ])rotate([0,0,-5.9])
   translate([space*5,space*0.5,0+addZ])rotate([6,0,0])
   children();
 }
@@ -117,10 +114,26 @@ module cherryCap(x=0,y=0,z=0, capSize=1, homing=false,rotateCap=false){
 
 }
 
+module proMicro(pins=true){
+  rotate([0,0,180]){
+    if(pins){
+      import("pro-micro_wpins.stl");
+    } else {
+      import("pro-micro.stl");
+    }
+  }
+}
+
+module pmHolder_base(){
+  rotate([0,0,180])import("pro-micro-holder_base.stl");
+}
+module pmHolder_lid(){
+  rotate([0,0,180])import("pro-micro-holder_lid.stl");
+}
+
 // ---- Various ----
 module screwIn(ro=5,ri=2,h=5){
   difference(){
-    //cylinder(r=ro,h=h,$fn=30,center=true);
     cube([ro*2,ro*2,h], center=true);
     cylinder(r=ri,h=h+1,$fn=30,center=true);
     translate([0,0,-((h/2))])cylinder(r1=3,r2=2,h=1,$fn=30,center=true);
@@ -128,15 +141,13 @@ module screwIn(ro=5,ri=2,h=5){
 }
 module screwInWithMount(h=8,d=12,ri=3){
   difference(){
-    cylinder(d=d,h=h,$fn=30,center=true);
-    translate([d,0,0])cube([d*2,d*2,h+1],center=true);
-    cylinder(r=ri,h=h+1,$fn=30,center=true);
-    translate([0,0,-((h/2))])cylinder(r1=ri+(ri/2),r2=ri,h=1,$fn=30,center=true);
-  }
-  difference(){
-    translate([d/4,0,0])cube([d/2,d-0.055,h],center=true);
-    cylinder(r=ri,h=h+1,$fn=30,center=true);
-    translate([0,0,-((h/2))])cylinder(r1=ri+(ri/2),r2=ri,h=1,$fn=30,center=true);
+    union(){
+      cylinder(d=d,h=h,$fn=30,center=true);
+      translate([d/4,0,0])cube([d/2,d-0.055,h],center=true);
+    }
+    cylinder(d=ri,h=h+1,$fn=30,center=true);
+    translate([0,0,-((h/2))])cylinder(d1=ri+(ri),d2=ri,h=1,$fn=30,center=true);
+    translate([0,0,h-ri*1.66])cylinder(h=mNutH(ri),d=mNutD(ri),center=true);
   }
 }
 
@@ -2259,7 +2270,7 @@ module switchPlacement(){
 
 module upperCaseBuild(){
   if(showUpperCase){
-    //keyPlates();
+    keyPlates();
     union(){skirt();}
   }
 }
@@ -2305,7 +2316,7 @@ module topNoCuts(){
 
 module bottomCase(){
   difference(){
-    translate([0,0,-3])bottomMould(6);
+    translate([0,0,-4])bottomMould(7);
     topNoCuts();
     scaleA=1.02;
     scale([scaleA,scaleA])topNoCuts();
@@ -2361,7 +2372,6 @@ module flatTop(showCut=true){
   rotate([0,-keyboardRotation[1]*0.46666,0])
   translate([-4,0,-15.5])
   top(showCut);
-
 }
 
 module screwPoints(ri=3,holes=false){
@@ -2369,14 +2379,17 @@ module screwPoints(ri=3,holes=false){
     cube([1,1,1],center=true);
   }  
   holeZ=-2.6;
+  module hole(){
+    translate([0,0,holeZ]){
+      cylinder(d=ri,h=8+1,$fn=30,center=true);
+      #translate([0,0,-4.5])cylinder(d=ri,h=2.5,$fn=30,center=true);
+    }
+  }
   // Back right
   translate([-70.5,35,4]){
     rotate([0,0,180])screwInWithMount(ri=ri);
     if(holes){
-      translate([0,0,holeZ]){
-        cylinder(r=ri,h=8+1,$fn=30,center=true);
-        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
-      }
+      hole();
     }
   }
   
@@ -2384,10 +2397,7 @@ module screwPoints(ri=3,holes=false){
   translate([-30,58,4])rotate([0,0,90]){
     screwInWithMount(ri=ri);
     if(holes){
-      translate([0,0,holeZ]){
-        cylinder(r=ri,h=8+1,$fn=30,center=true);
-        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
-      }
+      hole();
     }
     hull(){
       translate([4.5,-5.4752,-3.5])point();
@@ -2408,10 +2418,7 @@ module screwPoints(ri=3,holes=false){
   translate([-51,-55.5,4]){
     rotate([0,0,190])screwInWithMount(ri=ri);
     if(holes){
-      translate([0,0,holeZ]){
-        cylinder(r=ri,h=8+1,$fn=30,center=true);
-        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
-      }
+      hole();
     }
 
     hull(){
@@ -2452,10 +2459,7 @@ module screwPoints(ri=3,holes=false){
   translate([54.5,55,4]){
     screwInWithMount(ri=ri);
     if(holes){
-      translate([0,0,holeZ]){
-        cylinder(r=ri,h=8+1,$fn=30,center=true);
-        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
-      }
+      hole();
     }
 
     hull(){
@@ -2493,10 +2497,7 @@ module screwPoints(ri=3,holes=false){
     screwInWithMount(ri=ri);
     
     if(holes){
-      translate([0,0,holeZ]){
-        cylinder(r=ri,h=8+1,$fn=30,center=true);
-        translate([0,0,-((8/2))])cylinder(r1=ri+1,r2=ri,h=1,$fn=30,center=true);
-      }
+      hole();
     }
     
     hull(){
@@ -2531,8 +2532,23 @@ module flatBottom(){
   }
 }
 
-//flatTop();
-//screwPoints();
-flatBottom();
-//screwPoints();
+difference(){
+  flatTop(showCut);
 
+  translate([-53,-44.4,15])
+  rotate([-15,107,-10])
+  rotate([0,0,180])
+  translate([0,17,1.7])
+  cube([8,8,3], center=true);
+}
+// screwPoints();
+// flatBottom();
+// screwPoints();
+// cylinder(d=3,h=30);
+// cherrySwitch();
+
+translate([-53,-44.4,15])rotate([-15,107,-10]){ 
+  #proMicro();
+  pmHolder_base();
+  pmHolder_lid();
+}
