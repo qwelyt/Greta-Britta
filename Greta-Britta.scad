@@ -130,6 +130,9 @@ module pmHolder_base(){
 module pmHolder_lid(){
   rotate([0,0,180])import("pro-micro-holder_lid.stl");
 }
+module pitch(){
+  import("pitch.stl");
+}
 
 // ---- Various ----
 module screwIn(ro=5,ri=2,h=5){
@@ -2533,7 +2536,8 @@ module flatBottom(){
 }
 
 difference(){
-  flatTop(showCut);
+  // flatTop(showCut);
+  flatTop(true);
 
   translate([-53,-44.4,15])
   rotate([-15,107,-10])
@@ -2552,3 +2556,7 @@ translate([-53,-44.4,15])rotate([-15,107,-10]){
   pmHolder_base();
   pmHolder_lid();
 }
+
+rotate([0,180,0])proMicro();
+
+#translate([7.5,1.8,-7])pitch();

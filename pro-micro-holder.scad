@@ -1,5 +1,5 @@
 module pins(numPins){
-  space=2.6;
+  space=2.54;
   translate([0,-(space*numPins)/2])
   union(){
     for (i=[0:numPins-1]) {
@@ -26,22 +26,22 @@ module proMicro(pins=true){
 }
 module holder_base(){
   difference(){
-    cube([22,37,4.5], center=true);
-    cube([18.2,33.2,6], center=true);
-    translate([0,17,1.7])cube([8,4,3], center=true);
-    translate([0,-17,2])cube([23,2,2.6],center=true);
+    translate([0,-1.5,0])cube([22,40,5], center=true);
+    cube([19,33.7,6], center=true);
+    translate([0,18,2])cube([8,8,3], center=true);
+    translate([0,-18,2])cube([23,2.3,2.6],center=true);
   }
-  translate([0,0,-1.6])cube([10,37,1.3],center=true);
+  translate([0,0,-1.85])cube([10,37,1.3],center=true);
 }
 
 module holder_lid(){
   union(){
-    translate([0,-2,2.8])cube([10,30,1],center=true);
-    translate([0,-17,2])cube([22,2,2.6],center=true);
+    translate([0,-3,2.8])cube([10,32,1],center=true);
+    translate([0,-18,2])cube([22,2,2.6],center=true);
   }
 }
 
-// proMicro();
+//proMicro();
 // holder_base();
-holder_lid();
+ holder_lid();
 
