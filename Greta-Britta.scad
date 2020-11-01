@@ -2544,6 +2544,11 @@ difference(){
   rotate([0,0,180])
   translate([0,17,1.7])
   cube([8,8,3], center=true);
+  
+  translate([-60,-10,25])
+  rotate([51,0,0]) 
+  rotate([0,-28,0]) 
+  cylinder(d=8, h=16,$fn=50,center=true);
 }
 // screwPoints();
 // flatBottom();
@@ -2557,6 +2562,20 @@ translate([-53,-44.4,15])rotate([-15,107,-10]){
   pmHolder_lid();
 }
 
-rotate([0,180,0])proMicro();
+  translate([-60,-10,25])
+  rotate([51,0,0]) 
+  rotate([0,-28,0]){
+      translate([0,0,2])
+      cylinder(d=7.5, h=16,$fn=50,center=true);
+      
+      translate([0,0,8]){
+          difference(){
+            cylinder(d=10,h=2,center=true,$fn=6);
+              cylinder(d=7,h=4,center=true,$fn=50);
+          }
+      }
+  }
 
-#translate([7.5,1.8,-7])pitch();
+//rotate([0,180,0])proMicro();
+
+//#translate([7.5,1.8,-7])pitch();
